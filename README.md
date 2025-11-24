@@ -26,7 +26,7 @@ Create or edit your `~/.npmrc` file to include:
 Or use npm login:
 
 ```bash
-npm login --scope=@bitrockteam --auth-type=legacy --registry=https://npm.pkg.github.com
+npm login --scope=davide97g --auth-type=legacy --registry=https://npm.pkg.github.com
 ```
 
 ### 2. Configure project .npmrc
@@ -35,19 +35,19 @@ Add the following to your project's `.npmrc` file (or create one):
 
 ```bash
 # .npmrc
-@bitrockteam:registry=https://npm.pkg.github.com
+davide97g:registry=https://npm.pkg.github.com
 ```
 
 ### 3. Install the package
 
 ```bash
-npm install @bitrockteam/sonarflow
+npm install davide97g/sonarflow
 ```
 
 Or install globally:
 
 ```bash
-npm install -g @bitrockteam/sonarflow
+npm install -g davide97g/sonarflow
 ```
 
 ## Quick Start
@@ -57,7 +57,7 @@ npm install -g @bitrockteam/sonarflow
 Run the interactive setup to configure your project:
 
 ```bash
-npx @bitrockteam/sonarflow init
+npx davide97g/sonarflow init
 ```
 
 This will:
@@ -130,13 +130,13 @@ After creating tokens, place them in your `.env` as shown in the "Set Up Environ
 
 ```bash
 # Fetch issues for current branch (auto-detects PR on GitHub/Bitbucket)
-npx @bitrockteam/sonarflow fetch
+npx davide97g/sonarflow fetch
 
 # Fetch issues for a specific branch
-npx @bitrockteam/sonarflow fetch my-branch
+npx davide97g/sonarflow fetch my-branch
 
 # Fetch issues from a SonarQube PR link
-npx @bitrockteam/sonarflow fetch my-branch https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY
+npx davide97g/sonarflow fetch my-branch https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY
 ```
 
 - Auto PR detection tries provider API first (GitHub or Bitbucket), then falls back to extracting from branch naming patterns.
@@ -146,14 +146,14 @@ npx @bitrockteam/sonarflow fetch my-branch https://sonarcloud.io/project/issues?
 
 ```bash
 # Interactive setup
-npx @bitrockteam/sonarflow init
+npx davide97g/sonarflow init
 ```
 
 #### Check for Updates
 
 ```bash
 # Check for updates and get latest version info
-npx @bitrockteam/sonarflow update
+npx davide97g/sonarflow update
 ```
 
 ### As npm Scripts
@@ -196,7 +196,7 @@ Since this CLI is designed to be used with `npx`, updating is simple:
 
 ```bash
 # Use @latest to always get the most recent version
-npx @bitrockteam/sonarflow@latest <command>
+npx davide97g/sonarflow@latest <command>
 ```
 
 ## How It Works
@@ -253,10 +253,10 @@ The MCP server is included when you install the package. You can use it with `np
 
 ```bash
 # Using npx
-npx @bitrockteam/sonarflow mcp
+npx davide97g/sonarflow mcp
 
 # Using bunx
-bunx @bitrockteam/sonarflow mcp
+bunx davide97g/sonarflow mcp
 ```
 
 ### Configuration {#configuration}
@@ -268,7 +268,7 @@ Add the MCP server to your MCP client configuration. For Cursor, create or updat
   "mcpServers": {
     "sonarflow": {
       "command": "npx",
-      "args": ["@bitrockteam/sonarflow", "mcp"]
+      "args": ["davide97g/sonarflow", "mcp"]
     }
   }
 }

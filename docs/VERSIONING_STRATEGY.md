@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the versioning strategy and tooling for `@bitrockteam/sonarflow` CLI package.
+This document outlines the versioning strategy and tooling for `davide97g/sonarflow` CLI package.
 
 ## Recommended Tool: `standard-version`
 

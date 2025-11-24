@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "@bitrockteam/sonarflow",
+      "name": "davide97g/sonarflow",
       "dependencies": {
         "@inquirer/prompts": "^7.10.1",
         "@modelcontextprotocol/sdk": "^1.22.0",

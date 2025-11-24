@@ -1,6 +1,6 @@
 # Release Guide
 
-Quick reference for releasing new versions of `@bitrockteam/sonarflow`.
+Quick reference for releasing new versions of `davide97g/sonarflow`.
 
 ## Automated Releases (Primary Method)
 

@@ -32,7 +32,7 @@ try {
 
   // Update $id field with new version
   const oldId = schema.$id;
-  schema.$id = `https://raw.githubusercontent.com/bitrockteam/sonarflow/v${version}/schemas/sonarflowrc.schema.json`;
+  schema.$id = `https://raw.githubusercontent.com/davide97g/sonarflow/v${version}/schemas/sonarflowrc.schema.json`;
 
   // Write updated schema
   writeFileSync(schemaPath, JSON.stringify(schema, null, 2) + "\n", "utf8");

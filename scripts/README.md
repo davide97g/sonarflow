@@ -29,8 +29,8 @@ The script is integrated via `.versionrc.json`:
 
 ### Version Format
 
-- **Production releases**: `v0.2.4` → `https://raw.githubusercontent.com/bitrockteam/sonarflow/v0.2.4/schemas/sonarflowrc.schema.json`
-- **Beta releases**: `v0.2.4-beta.1` → `https://raw.githubusercontent.com/bitrockteam/sonarflow/v0.2.4-beta.1/schemas/sonarflowrc.schema.json`
+- **Production releases**: `v0.2.4` → `https://raw.githubusercontent.com/davide97g/sonarflow/v0.2.4/schemas/sonarflowrc.schema.json`
+- **Beta releases**: `v0.2.4-beta.1` → `https://raw.githubusercontent.com/davide97g/sonarflow/v0.2.4-beta.1/schemas/sonarflowrc.schema.json`
 
 ### Manual Execution
 

@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
 // Try multiple paths to support both development and production (published package)
 const packageJsonPaths = [
   path.join(__dirname, "..", "..", "package.json"), // Development: dist/mcp/server.js -> package.json
-  path.join(__dirname, "..", "..", "..", "package.json"), // Production: node_modules/@bitrockteam/sonarflow/dist/mcp/server.js -> package.json
+  path.join(__dirname, "..", "..", "..", "package.json"), // Production: node_modules/davide97g/sonarflow/dist/mcp/server.js -> package.json
 ];
 
 let packageJson: { version: string; name?: string };
@@ -53,7 +53,7 @@ const server = new McpServer(
 // Load prompt from file
 // Works for both development and production:
 // - Development: dist/mcp/server.js -> ../../src/prompts
-// - Production: node_modules/@bitrockteam/sonarflow/dist/mcp/server.js -> ../../src/prompts
+// - Production: node_modules/davide97g/sonarflow/dist/mcp/server.js -> ../../src/prompts
 const loadPrompt = (name: string): string => {
   const promptPath = path.join(__dirname, "..", "..", "src", "prompts", `${name}.txt`);
   try {

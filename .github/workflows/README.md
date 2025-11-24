@@ -98,14 +98,14 @@ Releases are automatically skipped if:
 
 **Beta version:**
 ```bash
-npm install @bitrockteam/sonarflow@beta
+npm install davide97g/sonarflow@beta
 ```
 
 **Production version:**
 ```bash
-npm install @bitrockteam/sonarflow@latest
+npm install davide97g/sonarflow@latest
 # or
-npm install @bitrockteam/sonarflow
+npm install davide97g/sonarflow
 ```
 
 ### Troubleshooting

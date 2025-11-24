@@ -31,7 +31,7 @@ Feature Branch → develop → main
 
 **Install beta version:**
 ```bash
-npm install @bitrockteam/sonarflow@beta
+npm install davide97g/sonarflow@beta
 ```
 
 #### 2. Production Releases (`main` branch)
@@ -54,9 +54,9 @@ npm install @bitrockteam/sonarflow@beta
 
 **Install production version:**
 ```bash
-npm install @bitrockteam/sonarflow@latest
+npm install davide97g/sonarflow@latest
 # or simply
-npm install @bitrockteam/sonarflow
+npm install davide97g/sonarflow
 ```
 
 ## Commit Message Format
@@ -175,7 +175,7 @@ These are automatically available via `GITHUB_TOKEN` in GitHub Actions.
 
 ## Monitoring Releases
 
-- **GitHub Actions:** https://github.com/bitrockteam/sonarflow/actions
-- **Releases:** https://github.com/bitrockteam/sonarflow/releases
-- **Packages:** https://github.com/orgs/bitrockteam/packages
+- **GitHub Actions:** https://github.com/davide97g/sonarflow/actions
+- **Releases:** https://github.com/davide97g/sonarflow/releases
+- **Packages:** https://github.com/orgs/davide97g/packages
 

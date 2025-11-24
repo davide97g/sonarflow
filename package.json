@@ -1,10 +1,10 @@
 {
-  "name": "@bitrockteam/sonarflow",
-  "version": "1.0.0-beta.3",
+  "name": "sonarflow",
+  "version": "1.0.0-beta.4",
   "description": "CLI utility for fetching SonarQube issues and integrating with Bitbucket/GitHub PR workflows",
   "main": "dist/cli.js",
   "bin": {
-    "sonarflow": "./dist/cli.js"
+    "sonarflow": "dist/cli.js"
   },
   "scripts": {
     "build": "tsgo",
@@ -14,11 +14,11 @@
     "format": "biome format --write src",
     "check": "biome check src",
     "check:fix": "biome check --write src",
-    "prepublishOnly": "echo 'Publishing @bitrockteam/sonarflow...' && bun run build",
+    "prepublishOnly": "echo 'Publishing sonarflow to npm...' && bun run build",
     "init": "node dist/cli.js init",
     "fetch": "node dist/cli.js fetch",
     "mcp": "node dist/cli.js mcp",
-    "sonar:fetch": "npx @bitrockteam/sonarflow fetch",
+    "sonar:fetch": "npx sonarflow fetch",
     "prepare": "husky",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
@@ -36,10 +36,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bitrockteam/sonarflow.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "url": "git+https://github.com/davide97g/sonarflow.git"
   },
   "keywords": [
     "sonarqube",
@@ -55,12 +52,12 @@
     "sonarflow",
     "code-analysis"
   ],
-  "author": "bitrockteam",
+  "author": "davide97g",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bitrockteam/sonarflow/issues"
+    "url": "https://github.com/davide97g/sonarflow/issues"
   },
-  "homepage": "https://github.com/bitrockteam/sonarflow#readme",
+  "homepage": "https://github.com/davide97g/sonarflow#readme",
   "dependencies": {
     "@inquirer/prompts": "^7.10.1",
     "@modelcontextprotocol/sdk": "^1.22.0",
@@ -87,7 +84,6 @@
     "node": ">=22.21.0"
   },
   "packageManager": "bun@1.3.2",
-  "private": true,
   "peerDependencies": {
     "typescript": "^5.9.3"
   }

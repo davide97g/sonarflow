@@ -67,7 +67,7 @@ const runInit = async (): Promise<void> => {
     version: string;
   };
   const schemaVersion = sonarflowPackageJson.version;
-  const schemaUrl = `https://raw.githubusercontent.com/bitrockteam/sonarflow/v${schemaVersion}/schemas/sonarflowrc.schema.json`;
+  const schemaUrl = `https://raw.githubusercontent.com/davide97g/sonarflow/v${schemaVersion}/schemas/sonarflowrc.schema.json`;
 
   // Load package.json to derive sensible defaults
   const pkgPath = path.join(process.cwd(), "package.json");
@@ -352,7 +352,7 @@ const runInit = async (): Promise<void> => {
       ? ((await fs.readJson(pkgPath)) as PackageJson)
       : {};
     if (!existingPkg.scripts) existingPkg.scripts = {};
-    existingPkg.scripts["sonar:fetch"] = "npx @bitrockteam/sonarflow fetch";
+    existingPkg.scripts["sonar:fetch"] = "npx sonarflow fetch";
     await fs.writeJson(pkgPath, existingPkg, { spaces: 2 });
     scriptsSpinner.succeed("package.json scripts updated");
   } catch (error) {

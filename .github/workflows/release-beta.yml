@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: "22"
           registry-url: "https://npm.pkg.github.com"
-          scope: "@bitrockteam"
+          scope: "davide97g"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -109,7 +109,7 @@ jobs:
         run: |
           # Ensure .npmrc is correctly configured for GitHub Packages
           # The setup-node action should create this, but we verify/update it
-          echo "@bitrockteam:registry=https://npm.pkg.github.com" > .npmrc
+          echo "davide97g:registry=https://npm.pkg.github.com" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" >> .npmrc
 
           # Verify package.json version matches the tag
@@ -129,7 +129,7 @@ jobs:
           npm publish --tag beta || {
             echo "Publish failed. Checking if version already exists..."
             # If publish fails, check if it's because the version already exists
-            npm view @bitrockteam/sonarflow@$PACKAGE_VERSION && {
+            npm view davide97g/sonarflow@$PACKAGE_VERSION && {
               echo "Version $PACKAGE_VERSION already exists in registry, skipping publish"
               exit 0
             } || {
