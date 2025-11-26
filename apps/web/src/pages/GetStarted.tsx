@@ -1,6 +1,6 @@
+import { AlertCircle } from "lucide-react";
 import CodeBlock from "@/components/CodeBlock";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
 
 const GetStarted = () => {
   return (
@@ -9,8 +9,7 @@ const GetStarted = () => {
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-4">Get Started</h1>
           <p className="text-lg text-muted-foreground">
-            Follow these steps to install and configure Sonarflow in your
-            project
+            Follow these steps to install and configure Sonarflow in your project
           </p>
         </div>
 
@@ -21,18 +20,15 @@ const GetStarted = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                Sonarflow is published to GitHub Packages. You need to
-                authenticate with a personal access token.
+                Sonarflow is published to GitHub Packages. You need to authenticate with a personal
+                access token.
               </p>
               <CodeBlock code="npm login --registry=https://npm.pkg.github.com" />
               <div className="flex gap-2 p-4 bg-accent/10 border border-accent/20 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                 <p className="text-sm">
                   You'll need a GitHub personal access token with{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">
-                    read:packages
-                  </code>{" "}
-                  scope
+                  <code className="px-1 py-0.5 bg-muted rounded text-xs">read:packages</code> scope
                 </p>
               </div>
             </CardContent>
@@ -45,8 +41,7 @@ const GetStarted = () => {
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 Create or update your project's{" "}
-                <code className="px-1 py-0.5 bg-muted rounded">.npmrc</code>{" "}
-                file:
+                <code className="px-1 py-0.5 bg-muted rounded">.npmrc</code> file:
               </p>
               <CodeBlock
                 code={`//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN`}
@@ -65,15 +60,11 @@ const GetStarted = () => {
               </p>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm font-medium mb-2">
-                    Global Installation:
-                  </p>
+                  <p className="text-sm font-medium mb-2">Global Installation:</p>
                   <CodeBlock code="npm install -g davide97g/sonarflow" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-2">
-                    Local Installation:
-                  </p>
+                  <p className="text-sm font-medium mb-2">Local Installation:</p>
                   <CodeBlock code="npm install --save-dev davide97g/sonarflow" />
                 </div>
               </div>
@@ -88,10 +79,10 @@ const GetStarted = () => {
               <p className="text-muted-foreground">
                 Run the interactive CLI to set up your configuration:
               </p>
-              <CodeBlock code="npx davide97g/sonarflow init" />
+              <CodeBlock code="npx sonarflow init" />
               <p className="text-sm text-muted-foreground">
-                This command will guide you through setting up the required
-                environment variables and configuration files.
+                This command will guide you through setting up the required environment variables
+                and configuration files.
               </p>
             </CardContent>
           </Card>
@@ -102,9 +93,8 @@ const GetStarted = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                Create a{" "}
-                <code className="px-1 py-0.5 bg-muted rounded">.env</code> file
-                with the required tokens:
+                Create a <code className="px-1 py-0.5 bg-muted rounded">.env</code> file with the
+                required tokens:
               </p>
               <CodeBlock
                 code={`# GitHub Token
@@ -126,9 +116,7 @@ SONAR_HOST_URL=https://your-sonarqube-instance.com`}
                   <ul className="list-disc list-inside space-y-1 ml-2">
                     <li>GitHub: Personal access token with repo scope</li>
                     <li>Bitbucket: App password with PR read permissions</li>
-                    <li>
-                      SonarQube: User token with project analysis permissions
-                    </li>
+                    <li>SonarQube: User token with project analysis permissions</li>
                   </ul>
                 </div>
               </div>
@@ -144,8 +132,8 @@ SONAR_HOST_URL=https://your-sonarqube-instance.com`}
                 Now you can start using Sonarflow to fetch issues and run scans:
               </p>
               <div className="space-y-3">
-                <CodeBlock code="npx davide97g/sonarflow fetch" />
-                <CodeBlock code="npx davide97g/sonarflow scan" />
+                <CodeBlock code="npx sonarflow fetch" />
+                <CodeBlock code="npx sonarflow scan" />
               </div>
             </CardContent>
           </Card>

@@ -1,3 +1,4 @@
+import CodeBlock from "@/components/CodeBlock";
 import {
   Accordion,
   AccordionContent,
@@ -5,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
-import CodeBlock from "@/components/CodeBlock";
 
 const FAQ = () => {
   const faqs = [
@@ -13,7 +13,11 @@ const FAQ = () => {
       question: "How do I authenticate with GitHub Packages?",
       answer: (
         <div className="space-y-3">
-          <p>You need a GitHub personal access token with the <code className="px-1 py-0.5 bg-muted rounded">read:packages</code> scope. Create one at GitHub Settings → Developer settings → Personal access tokens.</p>
+          <p>
+            You need a GitHub personal access token with the{" "}
+            <code className="px-1 py-0.5 bg-muted rounded">read:packages</code> scope. Create one at
+            GitHub Settings → Developer settings → Personal access tokens.
+          </p>
           <CodeBlock code="npm login --registry=https://npm.pkg.github.com" />
         </div>
       ),
@@ -29,10 +33,7 @@ const FAQ = () => {
             <li>Token doesn't have required permissions</li>
           </ul>
           <p>Verify your .npmrc file contains:</p>
-          <CodeBlock 
-            code={`//npm.pkg.github.com/:_authToken=YOUR_TOKEN`}
-            language="text"
-          />
+          <CodeBlock code={`//npm.pkg.github.com/:_authToken=YOUR_TOKEN`} language="text" />
         </div>
       ),
     },
@@ -41,12 +42,15 @@ const FAQ = () => {
       answer: (
         <div className="space-y-3">
           <p>Set up your environment variables with Bitbucket credentials:</p>
-          <CodeBlock 
+          <CodeBlock
             code={`BITBUCKET_USERNAME=your_username
 BITBUCKET_APP_PASSWORD=your_app_password`}
             language="bash"
           />
-          <p>Create an app password at Bitbucket Settings → Personal settings → App passwords with PR read permissions.</p>
+          <p>
+            Create an app password at Bitbucket Settings → Personal settings → App passwords with PR
+            read permissions.
+          </p>
         </div>
       ),
     },
@@ -54,7 +58,10 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       question: "What SonarQube versions are supported?",
       answer: (
         <div className="space-y-3">
-          <p>Sonarflow works with SonarQube 7.9+ and SonarCloud. Both Community and Enterprise editions are supported.</p>
+          <p>
+            Sonarflow works with SonarQube 7.9+ and SonarCloud. Both Community and Enterprise
+            editions are supported.
+          </p>
         </div>
       ),
     },
@@ -62,8 +69,11 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       question: "Can I run scans without a SonarQube server?",
       answer: (
         <div className="space-y-3">
-          <p>Yes! The <code className="px-1 py-0.5 bg-muted rounded">scan</code> command runs SonarScanner locally without requiring a SonarQube server instance.</p>
-          <CodeBlock code="npx davide97g/sonarflow scan" />
+          <p>
+            Yes! The <code className="px-1 py-0.5 bg-muted rounded">scan</code> command runs
+            SonarScanner locally without requiring a SonarQube server instance.
+          </p>
+          <CodeBlock code="npx sonarflow scan" />
         </div>
       ),
     },
@@ -71,10 +81,19 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       question: "Where are the issue reports stored?",
       answer: (
         <div className="space-y-3">
-          <p>Reports are stored in the <code className="px-1 py-0.5 bg-muted rounded">.sonar</code> directory:</p>
+          <p>
+            Reports are stored in the <code className="px-1 py-0.5 bg-muted rounded">.sonar</code>{" "}
+            directory:
+          </p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li><code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code> - Fetched PR issues</li>
-            <li><code className="px-1 py-0.5 bg-muted rounded">.sonar/scanner-report.json</code> - Local scan results</li>
+            <li>
+              <code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code> - Fetched PR
+              issues
+            </li>
+            <li>
+              <code className="px-1 py-0.5 bg-muted rounded">.sonar/scanner-report.json</code> -
+              Local scan results
+            </li>
           </ul>
         </div>
       ),
@@ -85,9 +104,17 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
         <div className="space-y-3">
           <p>Sonarflow automatically generates JSON reports that AI editors can read:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li><strong>Cursor:</strong> Configure settings to read <code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code></li>
-            <li><strong>VSCode:</strong> Install the Sonarflow extension</li>
-            <li><strong>Windsurf:</strong> Automatically detects <code className="px-1 py-0.5 bg-muted rounded">.sonar</code> directories</li>
+            <li>
+              <strong>Cursor:</strong> Configure settings to read{" "}
+              <code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code>
+            </li>
+            <li>
+              <strong>VSCode:</strong> Install the Sonarflow extension
+            </li>
+            <li>
+              <strong>Windsurf:</strong> Automatically detects{" "}
+              <code className="px-1 py-0.5 bg-muted rounded">.sonar</code> directories
+            </li>
           </ul>
         </div>
       ),
@@ -98,9 +125,16 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
         <div className="space-y-3">
           <p>Check your access tokens have the correct permissions:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li><strong>GitHub:</strong> <code className="px-1 py-0.5 bg-muted rounded">repo</code> and <code className="px-1 py-0.5 bg-muted rounded">read:packages</code></li>
-            <li><strong>Bitbucket:</strong> PR read permissions</li>
-            <li><strong>SonarQube:</strong> Project analysis permissions</li>
+            <li>
+              <strong>GitHub:</strong> <code className="px-1 py-0.5 bg-muted rounded">repo</code>{" "}
+              and <code className="px-1 py-0.5 bg-muted rounded">read:packages</code>
+            </li>
+            <li>
+              <strong>Bitbucket:</strong> PR read permissions
+            </li>
+            <li>
+              <strong>SonarQube:</strong> Project analysis permissions
+            </li>
           </ul>
         </div>
       ),
@@ -110,7 +144,7 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       answer: (
         <div className="space-y-3">
           <p>Use the update command to check and install the latest version:</p>
-          <CodeBlock code="npx davide97g/sonarflow update" />
+          <CodeBlock code="npx sonarflow update" />
           <p>Or reinstall manually:</p>
           <CodeBlock code="npm install -g davide97g/sonarflow@latest" />
         </div>
@@ -121,11 +155,11 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       answer: (
         <div className="space-y-3">
           <p>Yes! Sonarflow is perfect for CI/CD. Add it to your pipeline:</p>
-          <CodeBlock 
+          <CodeBlock
             code={`- name: Run Sonarflow
   run: |
-    npx davide97g/sonarflow fetch
-    npx davide97g/sonarflow scan`}
+    npx sonarflow fetch
+    npx sonarflow scan`}
             language="yaml"
           />
         </div>
@@ -148,9 +182,7 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left">
-                    {faq.question}
-                  </AccordionTrigger>
+                  <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     {faq.answer}
                   </AccordionContent>
@@ -164,7 +196,8 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
           <CardContent className="pt-6">
             <h3 className="text-xl font-semibold mb-2">Still have questions?</h3>
             <p className="text-muted-foreground mb-4">
-              Can't find what you're looking for? Open an issue on GitHub or reach out to the community.
+              Can't find what you're looking for? Open an issue on GitHub or reach out to the
+              community.
             </p>
             <a
               href="https://github.com/davide97g/sonarflow/issues"

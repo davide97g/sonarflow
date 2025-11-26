@@ -35,7 +35,7 @@ const MCP = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using npx:</p>
-                  <CodeBlock code="npx davide97g/sonarflow mcp" />
+                  <CodeBlock code="npx sonarflow mcp" />
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using bunx:</p>

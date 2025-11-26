@@ -1,46 +1,42 @@
-import CodeBlock from "@/components/CodeBlock";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Box,
+  Code,
   FileText,
   Github,
   GitPullRequest,
+  Plug,
   RefreshCw,
   Search,
-  Sparkles,
   Server,
-  Plug,
-  Code,
   Shield,
+  Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import CodeBlock from "@/components/CodeBlock";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Home = () => {
   const features = [
     {
       icon: GitPullRequest,
       title: "Automatic PR Detection",
-      description:
-        "Automatically fetches issues from your pull requests in GitHub and Bitbucket",
+      description: "Automatically fetches issues from your pull requests in GitHub and Bitbucket",
     },
     {
       icon: Search,
       title: "Local Scanning",
-      description:
-        "Run SonarQube scans locally on your codebase without server setup",
+      description: "Run SonarQube scans locally on your codebase without server setup",
     },
     {
       icon: Sparkles,
       title: "AI Editor Integration",
-      description:
-        "Seamlessly integrates with Cursor, VSCode, and Windsurf editors",
+      description: "Seamlessly integrates with Cursor, VSCode, and Windsurf editors",
     },
     {
       icon: FileText,
       title: "Issue Summary",
-      description:
-        "Get detailed JSON reports of all issues found in your project",
+      description: "Get detailed JSON reports of all issues found in your project",
     },
     {
       icon: RefreshCw,
@@ -66,8 +62,7 @@ const Home = () => {
               </span>
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Fetch issues, run local scans, and integrate seamlessly with your
-              AI-powered editor
+              Fetch issues, run local scans, and integrate seamlessly with your AI-powered editor
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -89,7 +84,7 @@ const Home = () => {
             </div>
 
             <div className="mt-12 max-w-xs mx-auto">
-              <CodeBlock code="npx davide97g/sonarflow init" />
+              <CodeBlock code="npx sonarflow init" />
             </div>
           </div>
         </div>
@@ -99,9 +94,7 @@ const Home = () => {
       <section className="py-20 md:py-32">
         <div className="container px-4 md:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold md:text-4xl mb-4">
-              Powerful Features
-            </h2>
+            <h2 className="text-3xl font-bold md:text-4xl mb-4">Powerful Features</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Everything you need to streamline your code quality workflow
             </p>
@@ -112,7 +105,7 @@ const Home = () => {
               const Icon = feature.icon;
               return (
                 <Card
-                  key={index}
+                  key={index.toString()}
                   className="border-border/50 transition-all hover:shadow-lg hover:-translate-y-1"
                 >
                   <CardContent className="p-6 space-y-4">
@@ -120,9 +113,7 @@ const Home = () => {
                       <Icon className="h-6 w-6 text-primary" />
                     </div>
                     <h3 className="text-xl font-semibold">{feature.title}</h3>
-                    <p className="text-muted-foreground">
-                      {feature.description}
-                    </p>
+                    <p className="text-muted-foreground">{feature.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -147,7 +138,7 @@ const Home = () => {
               <p className="text-muted-foreground">
                 Automatically retrieve SonarQube issues from your pull requests
               </p>
-              <CodeBlock code="npx davide97g/sonarflow fetch" />
+              <CodeBlock code="npx sonarflow fetch" />
             </div>
 
             <div className="space-y-4">
@@ -155,7 +146,7 @@ const Home = () => {
               <p className="text-muted-foreground">
                 Scan your codebase locally without server setup
               </p>
-              <CodeBlock code="npx davide97g/sonarflow scan" />
+              <CodeBlock code="npx sonarflow scan" />
             </div>
           </div>
         </div>
@@ -165,9 +156,7 @@ const Home = () => {
       <section className="py-20 md:py-32">
         <div className="container px-4 md:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold md:text-4xl mb-4">
-              Platform Support
-            </h2>
+            <h2 className="text-3xl font-bold md:text-4xl mb-4">Platform Support</h2>
             <p className="text-lg text-muted-foreground">
               Works seamlessly with your favorite platforms
             </p>
@@ -193,11 +182,10 @@ const Home = () => {
             <div className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4">
               Model Context Protocol
             </div>
-            <h2 className="text-3xl font-bold md:text-4xl mb-4">
-              MCP Server Integration
-            </h2>
+            <h2 className="text-3xl font-bold md:text-4xl mb-4">MCP Server Integration</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Sonarflow includes an MCP server that provides SonarQube and Bitbucket tools to AI assistants like Cursor, Claude Desktop, and other MCP-compatible clients.
+              Sonarflow includes an MCP server that provides SonarQube and Bitbucket tools to AI
+              assistants like Cursor, Claude Desktop, and other MCP-compatible clients.
             </p>
           </div>
 
@@ -209,12 +197,14 @@ const Home = () => {
                 <h3 className="text-2xl font-semibold">Installation</h3>
               </div>
               <p className="text-muted-foreground">
-                The MCP server is included when you install the package. You can use it with <code className="px-1.5 py-0.5 bg-muted rounded text-sm">npx</code> or <code className="px-1.5 py-0.5 bg-muted rounded text-sm">bunx</code>:
+                The MCP server is included when you install the package. You can use it with{" "}
+                <code className="px-1.5 py-0.5 bg-muted rounded text-sm">npx</code> or{" "}
+                <code className="px-1.5 py-0.5 bg-muted rounded text-sm">bunx</code>:
               </p>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using npx:</p>
-                  <CodeBlock code="npx davide97g/sonarflow mcp" />
+                  <CodeBlock code="npx sonarflow mcp" />
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using bunx:</p>
@@ -230,9 +220,10 @@ const Home = () => {
                 <h3 className="text-2xl font-semibold">Configuration</h3>
               </div>
               <p className="text-muted-foreground">
-                Add the MCP server to your MCP client configuration. For Cursor, create or update <code className="px-1.5 py-0.5 bg-muted rounded text-sm">.cursor/mcp.json</code>:
+                Add the MCP server to your MCP client configuration. For Cursor, create or update{" "}
+                <code className="px-1.5 py-0.5 bg-muted rounded text-sm">.cursor/mcp.json</code>:
               </p>
-              
+
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="text-sm font-medium">With npx (recommended):</p>
@@ -282,10 +273,18 @@ const Home = () => {
                     <div className="pt-2 border-t border-border/50">
                       <p className="text-xs font-medium mb-1">Parameters:</p>
                       <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                        <li><code className="px-1 py-0.5 bg-muted rounded">owner</code></li>
-                        <li><code className="px-1 py-0.5 bg-muted rounded">repo</code></li>
-                        <li><code className="px-1 py-0.5 bg-muted rounded">token</code> (optional)</li>
-                        <li><code className="px-1 py-0.5 bg-muted rounded">email</code> (optional)</li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">owner</code>
+                        </li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">repo</code>
+                        </li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">token</code> (optional)
+                        </li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">email</code> (optional)
+                        </li>
                       </ul>
                     </div>
                   </CardContent>
@@ -300,9 +299,17 @@ const Home = () => {
                     <div className="pt-2 border-t border-border/50">
                       <p className="text-xs font-medium mb-1">Parameters:</p>
                       <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                        <li><code className="px-1 py-0.5 bg-muted rounded">projectKey</code></li>
-                        <li><code className="px-1 py-0.5 bg-muted rounded">sonarToken</code> (optional)</li>
-                        <li><code className="px-1 py-0.5 bg-muted rounded">sonarBaseUrl</code> (optional)</li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">projectKey</code>
+                        </li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">sonarToken</code>{" "}
+                          (optional)
+                        </li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">sonarBaseUrl</code>{" "}
+                          (optional)
+                        </li>
                       </ul>
                     </div>
                   </CardContent>
@@ -326,7 +333,9 @@ const Home = () => {
                     <div className="pt-2 border-t border-border/50">
                       <p className="text-xs font-medium mb-1">Parameters:</p>
                       <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                        <li><code className="px-1 py-0.5 bg-muted rounded">code</code></li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">code</code>
+                        </li>
                       </ul>
                     </div>
                   </CardContent>
@@ -336,12 +345,15 @@ const Home = () => {
                   <CardContent className="p-6 space-y-3">
                     <h4 className="font-semibold text-lg">security_scan</h4>
                     <p className="text-sm text-muted-foreground">
-                      Security expert prompt for scanning code for vulnerabilities and security issues
+                      Security expert prompt for scanning code for vulnerabilities and security
+                      issues
                     </p>
                     <div className="pt-2 border-t border-border/50">
                       <p className="text-xs font-medium mb-1">Parameters:</p>
                       <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                        <li><code className="px-1 py-0.5 bg-muted rounded">code</code></li>
+                        <li>
+                          <code className="px-1 py-0.5 bg-muted rounded">code</code>
+                        </li>
                       </ul>
                     </div>
                   </CardContent>
@@ -355,12 +367,10 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-20 md:py-32 bg-gradient-to-br from-primary to-accent text-primary-foreground">
         <div className="container px-4 md:px-8 text-center">
-          <h2 className="text-3xl font-bold md:text-4xl mb-4">
-            Why Developers Love Sonarflow
-          </h2>
+          <h2 className="text-3xl font-bold md:text-4xl mb-4">Why Developers Love Sonarflow</h2>
           <p className="text-lg opacity-90 max-w-2xl mx-auto mb-8">
-            Save time, improve code quality, and integrate AI-powered insights
-            directly into your workflow
+            Save time, improve code quality, and integrate AI-powered insights directly into your
+            workflow
           </p>
           <Link to="/get-started">
             <Button size="lg" variant="secondary" className="text-base px-8">

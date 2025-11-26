@@ -57,7 +57,7 @@ npm install -g davide97g/sonarflow
 Run the interactive setup to configure your project:
 
 ```bash
-npx davide97g/sonarflow init
+npx sonarflow init
 ```
 
 This will:
@@ -130,13 +130,13 @@ After creating tokens, place them in your `.env` as shown in the "Set Up Environ
 
 ```bash
 # Fetch issues for current branch (auto-detects PR on GitHub/Bitbucket)
-npx davide97g/sonarflow fetch
+npx sonarflow fetch
 
 # Fetch issues for a specific branch
-npx davide97g/sonarflow fetch my-branch
+npx sonarflow fetch my-branch
 
 # Fetch issues from a SonarQube PR link
-npx davide97g/sonarflow fetch my-branch https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY
+npx sonarflow fetch my-branch https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY
 ```
 
 - Auto PR detection tries provider API first (GitHub or Bitbucket), then falls back to extracting from branch naming patterns.
@@ -146,14 +146,14 @@ npx davide97g/sonarflow fetch my-branch https://sonarcloud.io/project/issues?id=
 
 ```bash
 # Interactive setup
-npx davide97g/sonarflow init
+npx sonarflow init
 ```
 
 #### Check for Updates
 
 ```bash
 # Check for updates and get latest version info
-npx davide97g/sonarflow update
+npx sonarflow update
 ```
 
 ### As npm Scripts
@@ -196,7 +196,7 @@ Since this CLI is designed to be used with `npx`, updating is simple:
 
 ```bash
 # Use @latest to always get the most recent version
-npx davide97g/sonarflow@latest <command>
+npx sonarflow@latest <command>
 ```
 
 ## How It Works
@@ -253,7 +253,7 @@ The MCP server is included when you install the package. You can use it with `np
 
 ```bash
 # Using npx
-npx davide97g/sonarflow mcp
+npx sonarflow mcp
 
 # Using bunx
 bunx davide97g/sonarflow mcp
