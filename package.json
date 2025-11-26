@@ -2,23 +2,20 @@
   "name": "sonarflow",
   "version": "1.0.0-beta.4",
   "description": "CLI utility for fetching SonarQube issues and integrating with Bitbucket/GitHub PR workflows",
-  "main": "dist/cli.js",
-  "bin": {
-    "sonarflow": "dist/cli.js"
-  },
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/@sonarflow/*"
+  ],
   "scripts": {
-    "build": "tsgo",
-    "dev": "tsgo --watch",
-    "lint": "biome lint src",
-    "lint:fix": "biome lint --write src",
-    "format": "biome format --write src",
-    "check": "biome check src",
-    "check:fix": "biome check --write src",
-    "prepublishOnly": "echo 'Publishing sonarflow to npm...' && bun run build",
-    "init": "node dist/cli.js init",
-    "fetch": "node dist/cli.js fetch",
-    "mcp": "node dist/cli.js mcp",
-    "sonar:fetch": "npx sonarflow fetch",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "turbo run format",
+    "check": "turbo run check",
+    "check:fix": "turbo run check:fix",
     "prepare": "husky",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
@@ -72,12 +69,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.5",
+    "@types/bun": "latest",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.19.1",
     "@typescript/native-preview": "^7.0.0-dev.20251116.1",
     "husky": "^9.1.7",
     "standard-version": "^9.5.0",
-    "@types/bun": "latest"
+    "turbo": "^2.6.1"
   },
   "type": "module",
   "engines": {

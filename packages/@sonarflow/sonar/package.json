@@ -1,0 +1,30 @@
+{
+  "name": "@sonarflow/sonar",
+  "version": "1.0.0-beta.4",
+  "description": "SonarQube utilities for Sonarflow",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./sonar-issue-extractor": "./dist/sonar-issue-extractor.js",
+    "./sonar-url-builder": "./dist/sonar-url-builder.js",
+    "./pr-detection-utils": "./dist/pr-detection-utils.js"
+  },
+  "scripts": {
+    "build": "tsgo",
+    "dev": "tsgo --watch",
+    "lint": "biome lint src",
+    "lint:fix": "biome lint --write src",
+    "format": "biome format --write src",
+    "check": "biome check src",
+    "check:fix": "biome check --write src"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "dotenv": "^17.2.3"
+  },
+  "files": [
+    "dist"
+  ]
+}

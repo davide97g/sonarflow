@@ -1,0 +1,27 @@
+{
+  "name": "@sonarflow/mcp-server",
+  "version": "1.0.0-beta.4",
+  "description": "MCP server for Sonarflow",
+  "type": "module",
+  "main": "./dist/server.js",
+  "bin": {
+    "sonarflow-mcp": "./dist/server.js"
+  },
+  "scripts": {
+    "build": "tsgo",
+    "dev": "tsgo --watch",
+    "lint": "biome lint src",
+    "lint:fix": "biome lint --write src",
+    "format": "biome format --write src",
+    "check": "biome check src",
+    "check:fix": "biome check --write src"
+  },
+  "dependencies": {
+    "@sonarflow/sonar": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "zod": "^3.25.76"
+  },
+  "files": [
+    "dist"
+  ]
+}
