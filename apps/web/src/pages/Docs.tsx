@@ -32,7 +32,7 @@ const Docs = () => {
                 <p className="text-muted-foreground">
                   Fetches SonarQube issues from your pull requests on GitHub or Bitbucket.
                 </p>
-                <CodeBlock code="npx @bitrockteam/sonarflow fetch" />
+                <CodeBlock code="npx davide97g/sonarflow fetch" />
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Options:</p>
                   <CodeBlock 
@@ -56,7 +56,7 @@ const Docs = () => {
                 <p className="text-muted-foreground">
                   Runs a local SonarQube scan on your codebase without requiring a SonarQube server.
                 </p>
-                <CodeBlock code="npx @bitrockteam/sonarflow scan" />
+                <CodeBlock code="npx davide97g/sonarflow scan" />
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Options:</p>
                   <CodeBlock 
@@ -79,7 +79,7 @@ const Docs = () => {
                 <p className="text-muted-foreground">
                   Interactive CLI wizard to set up Sonarflow configuration and environment variables.
                 </p>
-                <CodeBlock code="npx @bitrockteam/sonarflow init" />
+                <CodeBlock code="npx davide97g/sonarflow init" />
               </CardContent>
             </Card>
 
@@ -93,7 +93,7 @@ const Docs = () => {
                 <p className="text-muted-foreground">
                   Checks for and installs the latest version of Sonarflow.
                 </p>
-                <CodeBlock code="npx @bitrockteam/sonarflow update" />
+                <CodeBlock code="npx davide97g/sonarflow update" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -189,7 +189,7 @@ const Docs = () => {
                     <p className="text-muted-foreground mb-3">
                       Use the Sonarflow extension for VSCode:
                     </p>
-                    <CodeBlock code="code --install-extension bitrockteam.sonarflow" />
+                    <CodeBlock code="code --install-extension davide97g.sonarflow" />
                   </div>
 
                   <div>

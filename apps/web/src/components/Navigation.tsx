@@ -46,7 +46,7 @@ const Navigation = () => {
             </Link>
           ))}
           <a
-            href="https://github.com/bitrockteam/sonarflow"
+            href="https://github.com/davide97g/sonarflow"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -85,7 +85,7 @@ const Navigation = () => {
               </Link>
             ))}
             <a
-              href="https://github.com/bitrockteam/sonarflow"
+              href="https://github.com/davide97g/sonarflow"
               target="_blank"
               rel="noopener noreferrer"
             >

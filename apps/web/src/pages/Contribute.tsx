@@ -14,7 +14,7 @@ const Contribute = () => {
           </p>
           <div className="mt-8">
             <a
-              href="https://github.com/bitrockteam/sonarflow"
+              href="https://github.com/davide97g/sonarflow"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -45,7 +45,7 @@ const Contribute = () => {
                 <li>Add relevant logs or screenshots</li>
               </ul>
               <a
-                href="https://github.com/bitrockteam/sonarflow/issues/new"
+                href="https://github.com/davide97g/sonarflow/issues/new"
                 target="_blank"
                 rel="noopener noreferrer"
               >

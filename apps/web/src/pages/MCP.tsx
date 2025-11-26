@@ -1,6 +1,6 @@
+import { Code, Plug, Server, Shield } from "lucide-react";
 import CodeBlock from "@/components/CodeBlock";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Server, Plug, Code, Shield } from "lucide-react";
 
 const MCP = () => {
   return (
@@ -12,7 +12,8 @@ const MCP = () => {
           </div>
           <h1 className="text-4xl font-bold mb-4">MCP Server Integration</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Sonarflow includes an MCP server that provides SonarQube and Bitbucket tools to AI assistants like Cursor, Claude Desktop, and other MCP-compatible clients.
+            Sonarflow includes an MCP server that provides SonarQube and Bitbucket tools to AI
+            assistants like Cursor, Claude Desktop, and other MCP-compatible clients.
           </p>
         </div>
 
@@ -34,11 +35,11 @@ const MCP = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using npx:</p>
-                  <CodeBlock code="npx @bitrockteam/sonarflow mcp" />
+                  <CodeBlock code="npx davide97g/sonarflow mcp" />
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using bunx:</p>
-                  <CodeBlock code="bunx @bitrockteam/sonarflow mcp" />
+                  <CodeBlock code="bunx davide97g/sonarflow mcp" />
                 </div>
               </div>
             </CardContent>
@@ -57,7 +58,7 @@ const MCP = () => {
                 Add the MCP server to your MCP client configuration. For Cursor, create or update{" "}
                 <code className="px-1.5 py-0.5 bg-muted rounded text-sm">.cursor/mcp.json</code>:
               </p>
-              
+
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="text-sm font-medium">With npx (recommended):</p>
@@ -66,7 +67,7 @@ const MCP = () => {
   "mcpServers": {
     "sonarflow": {
       "command": "npx",
-      "args": ["@bitrockteam/sonarflow", "mcp"]
+      "args": ["davide97g/sonarflow", "mcp"]
     }
   }
 }`}
@@ -141,10 +142,12 @@ const MCP = () => {
                           <code className="px-1 py-0.5 bg-muted rounded">projectKey</code>
                         </li>
                         <li>
-                          <code className="px-1 py-0.5 bg-muted rounded">sonarToken</code> (optional)
+                          <code className="px-1 py-0.5 bg-muted rounded">sonarToken</code>{" "}
+                          (optional)
                         </li>
                         <li>
-                          <code className="px-1 py-0.5 bg-muted rounded">sonarBaseUrl</code> (optional)
+                          <code className="px-1 py-0.5 bg-muted rounded">sonarBaseUrl</code>{" "}
+                          (optional)
                         </li>
                       </ul>
                     </div>
@@ -185,7 +188,8 @@ const MCP = () => {
                   <CardContent className="p-6 space-y-3">
                     <h4 className="font-semibold text-lg">security_scan</h4>
                     <p className="text-sm text-muted-foreground">
-                      Security expert prompt for scanning code for vulnerabilities and security issues
+                      Security expert prompt for scanning code for vulnerabilities and security
+                      issues
                     </p>
                     <div className="pt-2 border-t border-border/50">
                       <p className="text-xs font-medium mb-1">Parameters:</p>
@@ -207,4 +211,3 @@ const MCP = () => {
 };
 
 export default MCP;
-

@@ -14,7 +14,7 @@ const FAQ = () => {
       answer: (
         <div className="space-y-3">
           <p>You need a GitHub personal access token with the <code className="px-1 py-0.5 bg-muted rounded">read:packages</code> scope. Create one at GitHub Settings → Developer settings → Personal access tokens.</p>
-          <CodeBlock code="npm login --registry=https://npm.pkg.github.com --scope=@bitrockteam" />
+          <CodeBlock code="npm login --registry=https://npm.pkg.github.com" />
         </div>
       ),
     },
@@ -30,8 +30,7 @@ const FAQ = () => {
           </ul>
           <p>Verify your .npmrc file contains:</p>
           <CodeBlock 
-            code={`@bitrockteam:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_TOKEN`}
+            code={`//npm.pkg.github.com/:_authToken=YOUR_TOKEN`}
             language="text"
           />
         </div>
@@ -64,7 +63,7 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       answer: (
         <div className="space-y-3">
           <p>Yes! The <code className="px-1 py-0.5 bg-muted rounded">scan</code> command runs SonarScanner locally without requiring a SonarQube server instance.</p>
-          <CodeBlock code="npx @bitrockteam/sonarflow scan" />
+          <CodeBlock code="npx davide97g/sonarflow scan" />
         </div>
       ),
     },
@@ -111,9 +110,9 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
       answer: (
         <div className="space-y-3">
           <p>Use the update command to check and install the latest version:</p>
-          <CodeBlock code="npx @bitrockteam/sonarflow update" />
+          <CodeBlock code="npx davide97g/sonarflow update" />
           <p>Or reinstall manually:</p>
-          <CodeBlock code="npm install -g @bitrockteam/sonarflow@latest" />
+          <CodeBlock code="npm install -g davide97g/sonarflow@latest" />
         </div>
       ),
     },
@@ -125,8 +124,8 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
           <CodeBlock 
             code={`- name: Run Sonarflow
   run: |
-    npx @bitrockteam/sonarflow fetch
-    npx @bitrockteam/sonarflow scan`}
+    npx davide97g/sonarflow fetch
+    npx davide97g/sonarflow scan`}
             language="yaml"
           />
         </div>
@@ -168,7 +167,7 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
               Can't find what you're looking for? Open an issue on GitHub or reach out to the community.
             </p>
             <a
-              href="https://github.com/bitrockteam/sonarflow/issues"
+              href="https://github.com/davide97g/sonarflow/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline font-medium"

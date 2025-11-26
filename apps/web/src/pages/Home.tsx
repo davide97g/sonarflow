@@ -77,7 +77,7 @@ const Home = () => {
                 </Button>
               </Link>
               <a
-                href="https://github.com/bitrockteam/sonarflow"
+                href="https://github.com/davide97g/sonarflow"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -89,7 +89,7 @@ const Home = () => {
             </div>
 
             <div className="mt-12 max-w-xs mx-auto">
-              <CodeBlock code="npx @bitrockteam/sonarflow init" />
+              <CodeBlock code="npx davide97g/sonarflow init" />
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ const Home = () => {
               <p className="text-muted-foreground">
                 Automatically retrieve SonarQube issues from your pull requests
               </p>
-              <CodeBlock code="npx @bitrockteam/sonarflow fetch" />
+              <CodeBlock code="npx davide97g/sonarflow fetch" />
             </div>
 
             <div className="space-y-4">
@@ -155,7 +155,7 @@ const Home = () => {
               <p className="text-muted-foreground">
                 Scan your codebase locally without server setup
               </p>
-              <CodeBlock code="npx @bitrockteam/sonarflow scan" />
+              <CodeBlock code="npx davide97g/sonarflow scan" />
             </div>
           </div>
         </div>
@@ -214,11 +214,11 @@ const Home = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using npx:</p>
-                  <CodeBlock code="npx @bitrockteam/sonarflow mcp" />
+                  <CodeBlock code="npx davide97g/sonarflow mcp" />
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Using bunx:</p>
-                  <CodeBlock code="bunx @bitrockteam/sonarflow mcp" />
+                  <CodeBlock code="bunx davide97g/sonarflow mcp" />
                 </div>
               </div>
             </div>
@@ -241,7 +241,7 @@ const Home = () => {
   "mcpServers": {
     "sonarflow": {
       "command": "npx",
-      "args": ["@bitrockteam/sonarflow", "mcp"]
+      "args": ["davide97g/sonarflow", "mcp"]
     }
   }
 }`}

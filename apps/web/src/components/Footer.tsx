@@ -52,7 +52,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://github.com/bitrockteam/sonarflow"
+                  href="https://github.com/davide97g/sonarflow"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-foreground transition-colors flex items-center gap-1"
@@ -87,7 +87,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 border-t border-border/40 pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 Sonarflow. Built by BitRock Team.</p>
+          <p>© 2025 Sonarflow. All rights reserved.</p>
         </div>
       </div>
     </footer>

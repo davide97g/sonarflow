@@ -24,7 +24,7 @@ const GetStarted = () => {
                 Sonarflow is published to GitHub Packages. You need to
                 authenticate with a personal access token.
               </p>
-              <CodeBlock code="npm login --registry=https://npm.pkg.github.com --scope=@bitrockteam" />
+              <CodeBlock code="npm login --registry=https://npm.pkg.github.com" />
               <div className="flex gap-2 p-4 bg-accent/10 border border-accent/20 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                 <p className="text-sm">
@@ -49,8 +49,7 @@ const GetStarted = () => {
                 file:
               </p>
               <CodeBlock
-                code={`@bitrockteam:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN`}
+                code={`//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN`}
                 language="text"
               />
             </CardContent>
@@ -69,13 +68,13 @@ const GetStarted = () => {
                   <p className="text-sm font-medium mb-2">
                     Global Installation:
                   </p>
-                  <CodeBlock code="npm install -g @bitrockteam/sonarflow" />
+                  <CodeBlock code="npm install -g davide97g/sonarflow" />
                 </div>
                 <div>
                   <p className="text-sm font-medium mb-2">
                     Local Installation:
                   </p>
-                  <CodeBlock code="npm install --save-dev @bitrockteam/sonarflow" />
+                  <CodeBlock code="npm install --save-dev davide97g/sonarflow" />
                 </div>
               </div>
             </CardContent>
@@ -89,7 +88,7 @@ const GetStarted = () => {
               <p className="text-muted-foreground">
                 Run the interactive CLI to set up your configuration:
               </p>
-              <CodeBlock code="npx @bitrockteam/sonarflow init" />
+              <CodeBlock code="npx davide97g/sonarflow init" />
               <p className="text-sm text-muted-foreground">
                 This command will guide you through setting up the required
                 environment variables and configuration files.
@@ -145,8 +144,8 @@ SONAR_HOST_URL=https://your-sonarqube-instance.com`}
                 Now you can start using Sonarflow to fetch issues and run scans:
               </p>
               <div className="space-y-3">
-                <CodeBlock code="npx @bitrockteam/sonarflow fetch" />
-                <CodeBlock code="npx @bitrockteam/sonarflow scan" />
+                <CodeBlock code="npx davide97g/sonarflow fetch" />
+                <CodeBlock code="npx davide97g/sonarflow scan" />
               </div>
             </CardContent>
           </Card>

@@ -9,7 +9,7 @@ const Contact = () => {
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Connect with the Sonarflow community and the BitRock team
+            Connect with the Sonarflow community
           </p>
         </div>
 
@@ -26,7 +26,7 @@ const Contact = () => {
                 Report bugs, request features, or contribute to the project on GitHub.
               </p>
               <a
-                href="https://github.com/bitrockteam/sonarflow"
+                href="https://github.com/davide97g/sonarflow"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -50,7 +50,7 @@ const Contact = () => {
                 Join the community discussions, ask questions, and share your experiences.
               </p>
               <a
-                href="https://github.com/bitrockteam/sonarflow/discussions"
+                href="https://github.com/davide97g/sonarflow/discussions"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -73,7 +73,7 @@ const Contact = () => {
               <p className="text-muted-foreground">
                 For business inquiries or direct support, reach out via email.
               </p>
-              <a href="mailto:support@bitrock.it">
+              <a href="mailto:support@sonarflow.dev">
                 <Button className="w-full gap-2">
                   <Mail className="h-4 w-4" />
                   Send Email
@@ -86,21 +86,21 @@ const Contact = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ExternalLink className="h-5 w-5" />
-                BitRock Website
+                Sonarflow Website
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                Learn more about BitRock and our other open source projects.
+                Visit the official Sonarflow website for more information and resources.
               </p>
               <a
-                href="https://www.bitrock.it"
+                href="https://www.sonarflow.dev"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Button className="w-full gap-2">
                   <ExternalLink className="h-4 w-4" />
-                  Visit BitRock
+                  Visit Website
                 </Button>
               </a>
             </CardContent>
@@ -151,7 +151,7 @@ const Contact = () => {
             <Card>
               <CardContent className="pt-6">
                 <div className="text-muted-foreground mb-1">Maintained By</div>
-                <div className="font-semibold">BitRock Team</div>
+                <div className="font-semibold">Sonarflow Team</div>
               </CardContent>
             </Card>
           </div>
