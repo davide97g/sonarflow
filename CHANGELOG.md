@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.8](https://github.com/davide97g/sonarflow/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2025-11-27)
+
+
+### Code Refactoring
+
+* clean up imports and improve code formatting in CLI and versioning modules ([6d3d91e](https://github.com/davide97g/sonarflow/commit/6d3d91e8d60ca5e46a2a2e0e7309097d0b5b7850))
+* rename CLI package to 'sonarflow' and update workflows for npm publishing ([ec0149d](https://github.com/davide97g/sonarflow/commit/ec0149d81c4b1d09ecf5a79ffead682d53d86bf3))
+
+
+### Chores
+
+* **release:** 1.0.0-beta.7 ([47b7caa](https://github.com/davide97g/sonarflow/commit/47b7caa1e212d2759191930ddeb929838e6f1a13))
+* update schema version to v1.0.0-beta.8 ([8283f8c](https://github.com/davide97g/sonarflow/commit/8283f8c1db13b62b4df35a62ea592f1df20f8c64))
+
 ## 1.0.0-beta.7 (2025-11-27)
 
 
