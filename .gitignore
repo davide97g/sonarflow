@@ -16,3 +16,5 @@ build
 .cursor/mcp.json
 .sonarflowrc.json
 .sonarflow/
+
+*.tsbuildinfo
