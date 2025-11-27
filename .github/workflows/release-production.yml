@@ -60,11 +60,11 @@ jobs:
           # Get latest production tag (excluding beta tags)
           git fetch --tags
           LATEST_PROD_TAG=$(git tag -l "v*" | grep -v "beta" | sort -V | tail -1 || echo "")
-          
+
           # Get current version from package.json
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "Current version: $CURRENT_VERSION"
-          
+
           # Function to calculate next non-beta version
           calculate_next_version() {
             local base_version=$1
@@ -93,10 +93,23 @@ jobs:
             
             echo "v${major}.${minor}.${patch}"
           }
-          
+
           # Function to create non-beta release
           create_production_release() {
             local release_type=$1
+            
+            # Always remove prerelease setting for production releases
+            # Create temporary .versionrc.json without prerelease setting
+            node -e "
+              const fs = require('fs');
+              const config = JSON.parse(fs.readFileSync('.versionrc.json', 'utf8'));
+              delete config.prerelease;
+              fs.writeFileSync('.versionrc.json.tmp', JSON.stringify(config, null, 2));
+            "
+            
+            # Backup original and use temp config
+            cp .versionrc.json .versionrc.json.backup
+            cp .versionrc.json.tmp .versionrc.json
             
             # Check if current version is beta
             if echo "$CURRENT_VERSION" | grep -q "beta"; then
@@ -120,18 +133,6 @@ jobs:
               NEXT_VERSION_NUM=$(echo "$NEXT_VERSION" | sed 's/v//')
               echo "Creating production release: $NEXT_VERSION"
               
-              # Create temporary .versionrc.json without prerelease setting for production
-              node -e "
-                const fs = require('fs');
-                const config = JSON.parse(fs.readFileSync('.versionrc.json', 'utf8'));
-                delete config.prerelease;
-                fs.writeFileSync('.versionrc.json.tmp', JSON.stringify(config, null, 2));
-              "
-              
-              # Backup original and use temp config
-              cp .versionrc.json .versionrc.json.backup
-              cp .versionrc.json.tmp .versionrc.json
-              
               # Use --release-as with exact version to force non-beta release
               bunx standard-version --release-as "$NEXT_VERSION_NUM" || {
                 # Restore original config on error
@@ -139,32 +140,53 @@ jobs:
                 rm -f .versionrc.json.tmp
                 exit 1
               }
-              
-              # Restore original config
-              mv .versionrc.json.backup .versionrc.json
-              rm -f .versionrc.json.tmp
             else
-              # Current version is not beta, use standard release
+              # Current version is not beta, use standard release commands
+              # but with the modified config (no prerelease)
               case "$release_type" in
                 "auto")
-                  bun run release
+                  bunx standard-version
                   ;;
                 "patch")
-                  bun run release:patch
+                  bunx standard-version --release-as patch
                   ;;
                 "minor")
-                  bun run release:minor
+                  bunx standard-version --release-as minor
                   ;;
                 "major")
-                  bun run release:major
+                  bunx standard-version --release-as major
                   ;;
-              esac
+              esac || {
+                # Restore original config on error
+                mv .versionrc.json.backup .versionrc.json
+                rm -f .versionrc.json.tmp
+                exit 1
+              }
             fi
+            
+            # Restore original config
+            mv .versionrc.json.backup .versionrc.json
+            rm -f .versionrc.json.tmp
           }
 
           if [ -z "$LATEST_PROD_TAG" ]; then
             echo "No previous production tag found, creating first release"
-            bun run release:first
+            # Remove prerelease setting for first release too
+            node -e "
+              const fs = require('fs');
+              const config = JSON.parse(fs.readFileSync('.versionrc.json', 'utf8'));
+              delete config.prerelease;
+              fs.writeFileSync('.versionrc.json.tmp', JSON.stringify(config, null, 2));
+            "
+            cp .versionrc.json .versionrc.json.backup
+            cp .versionrc.json.tmp .versionrc.json
+            bunx standard-version --first-release || {
+              mv .versionrc.json.backup .versionrc.json
+              rm -f .versionrc.json.tmp
+              exit 1
+            }
+            mv .versionrc.json.backup .versionrc.json
+            rm -f .versionrc.json.tmp
           else
             # Check if there are any conventional commits since last production tag
             COMMITS_SINCE_TAG=$(git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges)
@@ -192,13 +214,13 @@ jobs:
             echo "Error: No tag was created by the release process"
             exit 1
           fi
-          
+
           # Verify the tag is not a beta tag
           if echo "$NEW_TAG" | grep -q "beta"; then
             echo "Error: Created tag $NEW_TAG is a beta tag, but this is a production release"
             exit 1
           fi
-          
+
           echo "tag=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "Successfully created production release: $NEW_TAG"
 
