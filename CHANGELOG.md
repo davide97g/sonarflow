@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/davide97g/sonarflow/compare/v1.0.1...v1.0.3) (2025-11-27)
+
+
+### Chores
+
+* change package privacy status from true to false ([0d3e2b5](https://github.com/davide97g/sonarflow/commit/0d3e2b5e69dec6225ad7b507cffacfd38622b14c))
+* **release:** 1.0.2-beta.0 ([6682fa3](https://github.com/davide97g/sonarflow/commit/6682fa359fe1d22b1ed18ac653bedf140189f540))
+* **release:** add scripts for simulating production release workflow and enhance release process with non-beta version handling ([a403773](https://github.com/davide97g/sonarflow/commit/a4037731b17d5269df8386cd6860266063bf68a6))
+* **release:** enhance production release workflow to calculate next non-beta version and streamline release process ([422a936](https://github.com/davide97g/sonarflow/commit/422a936a00865c707ae8bbce4e4f57a92582ec22))
+* **release:** update to version 1.0.1 and enhance release workflow to handle patch releases and tag verification ([dd493d5](https://github.com/davide97g/sonarflow/commit/dd493d53efed7c4d0c3fa71843859d9b1677b4bc))
+* **release:** update version to 1.0.2-beta.0 in package.json and schema ([439db72](https://github.com/davide97g/sonarflow/commit/439db720bcc53c51ab32af93caa30a6e2bda2cc0))
+
 ### [1.0.2-beta.0](https://github.com/davide97g/sonarflow/compare/v1.0.1...v1.0.2-beta.0) (2025-11-27)
 
 
