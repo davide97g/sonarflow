@@ -8,7 +8,14 @@ import {
 } from "./pr-detection-utils.js";
 import { SonarUrlBuilder } from "./sonar-url-builder.js";
 
+// Suppress dotenv logs
+const originalConsoleLog = console.log;
+const originalConsoleWarn = console.warn;
+console.log = () => {};
+console.warn = () => {};
 dotenv.config();
+console.log = originalConsoleLog;
+console.warn = originalConsoleWarn;
 
 interface SonarIssue {
   severity?: string;

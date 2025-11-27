@@ -7,7 +7,14 @@ import chalk from "chalk";
 import dotenv from "dotenv";
 import { SonarIssueExtractor } from "../sonar/index.js";
 
+// Suppress dotenv logs
+const originalConsoleLog = console.log;
+const originalConsoleWarn = console.warn;
+console.log = () => {};
+console.warn = () => {};
 dotenv.config();
+console.log = originalConsoleLog;
+console.warn = originalConsoleWarn;
 
 interface Config {
   repoName: string;

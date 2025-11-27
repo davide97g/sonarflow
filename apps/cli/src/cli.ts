@@ -9,7 +9,14 @@ import { Command } from "commander";
 import dotenv from "dotenv";
 import { fetchSonarIssues } from "./packages/versioning/index.js";
 
+// Suppress dotenv logs
+const originalConsoleLog = console.log;
+const originalConsoleWarn = console.warn;
+console.log = () => {};
+console.warn = () => {};
 dotenv.config();
+console.log = originalConsoleLog;
+console.warn = originalConsoleWarn;
 
 // ESM-compatible __dirname/__filename
 const __filename = fileURLToPath(import.meta.url);
@@ -104,12 +111,11 @@ const showUpdateReminder = (): void => {
   console.log(chalk.blue(`   Run 'npx ${packageName} update' to check for updates\n`));
 };
 
-// Handle explicit version flags to also show update info
+// Handle explicit version flags - just show version number
 const argv = process.argv.slice(2);
 const requestedVersion = argv.includes("-v") || argv.includes("--version");
 if (requestedVersion) {
-  console.log(chalk.blue(currentVersion));
-  await checkForUpdates();
+  console.log(currentVersion);
   process.exit(0);
 }
 

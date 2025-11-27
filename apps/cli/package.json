@@ -16,7 +16,8 @@
     "check": "biome check src",
     "check:fix": "biome check --write src",
     "init": "bun run src/init.ts",
-    "fetch": "bun run src/cli.ts fetch"
+    "fetch": "bun run src/cli.ts fetch",
+    "version": "bun run src/cli.ts --version"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.10.1",
