@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/davide97g/sonarflow/compare/v1.0.9...v1.1.0) (2025-11-27)
+
+
+### Features
+
+* add init and fetch commands to CLI; enhance init process to load existing configuration from .sonarflowrc.json ([aedb60b](https://github.com/davide97g/sonarflow/commit/aedb60bc518762cf517747a91479f12c41c0c7a5))
+
 ### [1.0.9](https://github.com/davide97g/sonarflow/compare/v1.0.8...v1.0.9) (2025-11-27)
 
 
