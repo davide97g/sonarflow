@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.7](https://github.com/davide97g/sonarflow/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2025-11-27)
+
+
+### Documentation
+
+* add production release badge to README ([d06784c](https://github.com/davide97g/sonarflow/commit/d06784c7732ff19c8063dcee75d5abcf89e43a35))
+
+
+### Chores
+
+* remove MCP server from the project and update dependencies in package.json and bun.lock ([81c4921](https://github.com/davide97g/sonarflow/commit/81c49215e71cfb0176deaccfb0e5ff341e23d6ec))
+* update .gitignore to include .sonarflow and TypeScript build info files ([95966f2](https://github.com/davide97g/sonarflow/commit/95966f2522265dfe2cbef6af438dfa269af79fc5))
+* update Bun version to 1.3.3 and configure Node.js to use version from .nvmrc in release workflows ([71c9c90](https://github.com/davide97g/sonarflow/commit/71c9c9002874581496759834741e414e57138933))
+* update schema version to v1.0.0-beta.7 ([e0bc830](https://github.com/davide97g/sonarflow/commit/e0bc830f558a2b64bcb16668431d759c6e0e51e2))
+* update TypeScript configuration and package exports for improved module resolution and type definitions ([8b24da7](https://github.com/davide97g/sonarflow/commit/8b24da750a9e06a05688b036df2ae598415f25e3))
+
 ## [1.0.0-beta.6](https://github.com/davide97g/sonarflow/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2025-11-27)
 
 
