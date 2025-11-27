@@ -153,12 +153,12 @@ export const fetchSonarIssues = async (
     // Extract duplications, coverage, and security issues
     console.log(chalk.blue("📊 Fetching duplications, coverage, and security hotspots..."));
     const [measures, securityHotspots] = await Promise.all([
-      extractor.fetchMeasures(config, fetchOptions).catch((error) => {
+      extractor.fetchMeasures(config, fetchOptions).catch((error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.warn(chalk.yellow(`⚠️  Failed to fetch measures: ${errorMessage}`));
         return {};
       }),
-      extractor.fetchSecurityHotspots(config, fetchOptions).catch((error) => {
+      extractor.fetchSecurityHotspots(config, fetchOptions).catch((error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots: ${errorMessage}`));
         return {};

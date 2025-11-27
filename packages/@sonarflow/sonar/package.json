@@ -6,10 +6,22 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./sonar-issue-extractor": "./dist/sonar-issue-extractor.js",
-    "./sonar-url-builder": "./dist/sonar-url-builder.js",
-    "./pr-detection-utils": "./dist/pr-detection-utils.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./sonar-issue-extractor": {
+      "types": "./dist/sonar-issue-extractor.d.ts",
+      "default": "./dist/sonar-issue-extractor.js"
+    },
+    "./sonar-url-builder": {
+      "types": "./dist/sonar-url-builder.d.ts",
+      "default": "./dist/sonar-url-builder.js"
+    },
+    "./pr-detection-utils": {
+      "types": "./dist/pr-detection-utils.d.ts",
+      "default": "./dist/pr-detection-utils.js"
+    }
   },
   "scripts": {
     "build": "tsgo",
