@@ -59,7 +59,7 @@ jobs:
         run: |
           # Get latest production tag (excluding beta tags)
           git fetch --tags
-          LATEST_PROD_TAG=$(git tag -l "v*" --exclude="*beta*" | sort -V | tail -1 || echo "")
+          LATEST_PROD_TAG=$(git tag -l "v*" | grep -v "beta" | sort -V | tail -1 || echo "")
 
           if [ -z "$LATEST_PROD_TAG" ]; then
             echo "No previous production tag found, creating first release"

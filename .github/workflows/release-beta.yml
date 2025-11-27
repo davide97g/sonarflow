@@ -63,7 +63,7 @@ jobs:
           # Get all tags to find latest beta tag
           git fetch --tags
           LATEST_BETA_TAG=$(git tag -l "*beta*" | sort -V | tail -1 || echo "")
-          LATEST_PROD_TAG=$(git tag -l "v*" --exclude="*beta*" | sort -V | tail -1 || echo "")
+          LATEST_PROD_TAG=$(git tag -l "v*" | grep -v "beta" | sort -V | tail -1 || echo "")
 
           # Use the latest tag (either beta or prod) as reference
           REF_TAG=${LATEST_BETA_TAG:-${LATEST_PROD_TAG:-${LAST_TAG}}}
