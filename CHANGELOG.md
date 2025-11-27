@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/davide97g/sonarflow/compare/v1.3.0...v1.3.1) (2025-11-27)
+
+
+### Chores
+
+* **web:** update project metadata and remove lovable-tagger dependency ([12a91e1](https://github.com/davide97g/sonarflow/commit/12a91e102cba9a68effba053b373f5ce557c576f))
+
 ## [1.3.0](https://github.com/davide97g/sonarflow/compare/v1.2.0...v1.3.0) (2025-11-27)
 
 
