@@ -113,7 +113,7 @@ const getSeverityColor = (severity: string): typeof chalk => {
     HIGH: chalk.red,
     MEDIUM: chalk.hex("#FF8C00"), // Orange
     LOW: chalk.hex("#8B4513"), // Brown
-    INFO: chalk.blue,
+    INFO: chalk.whiteBright,
     // Legacy mappings
     CRITICAL: chalk.red,
     MAJOR: chalk.hex("#FF8C00"), // Orange
@@ -217,6 +217,50 @@ const extractMetrics = (
   return { coverage, duplication };
 };
 
+/**
+ * Builds the SonarQube project URL for viewing issues
+ */
+const buildSonarProjectUrl = (
+  config: Config,
+  fetchOptions: { branch?: string; pullRequest?: string }
+): string => {
+  const baseUrl = config.sonarBaseUrl || "https://sonarcloud.io";
+  const projectKey = config.sonarProjectKey || config.repoName;
+
+  // Normalize base URL (remove /api/... if present)
+  const normalizedUrl = baseUrl.replace(/\/api\/.*$/, "").replace(/\/$/, "");
+
+  // Build URL based on SonarCloud vs SonarQube
+  if (config.publicSonar && config.sonarOrganization) {
+    // SonarCloud format
+    const params = new URLSearchParams({
+      id: projectKey,
+      organization: config.sonarOrganization,
+    });
+
+    if (fetchOptions.pullRequest) {
+      params.set("pullRequest", fetchOptions.pullRequest);
+    } else if (fetchOptions.branch) {
+      params.set("branch", fetchOptions.branch);
+    }
+
+    return `${normalizedUrl}/project/issues?${params.toString()}`;
+  } else {
+    // Private SonarQube format
+    const params = new URLSearchParams({
+      id: projectKey,
+    });
+
+    if (fetchOptions.pullRequest) {
+      params.set("pullRequest", fetchOptions.pullRequest);
+    } else if (fetchOptions.branch) {
+      params.set("branch", fetchOptions.branch);
+    }
+
+    return `${normalizedUrl}/dashboard?${params.toString()}`;
+  }
+};
+
 export const fetchSonarIssues = async (
   branchName: string | null = null,
   sonarPrLink: string | null = null,
@@ -226,14 +270,14 @@ export const fetchSonarIssues = async (
     // Load configuration
     const config = loadConfiguration();
     if (verbose) {
-      console.log(chalk.blue(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
+      console.log(chalk.whiteBright(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
     }
 
     // Get current git branch
     const currentBranch =
       branchName || execSync("git branch --show-current", { encoding: "utf8" }).trim();
     if (verbose) {
-      console.log(chalk.blue(`Current branch: ${currentBranch}`));
+      console.log(chalk.whiteBright(`Current branch: ${currentBranch}`));
     }
 
     // Initialize SonarQube extractor
@@ -246,7 +290,7 @@ export const fetchSonarIssues = async (
     if (sonarPrLink) {
       // If PR link is provided, fetch issues from that PR
       if (verbose) {
-        console.log(chalk.blue(`Using provided SonarQube PR link: ${sonarPrLink}`));
+        console.log(chalk.whiteBright(`Using provided SonarQube PR link: ${sonarPrLink}`));
       }
       // Extract PR key from link
       const prKeyMatch = sonarPrLink.match(/pullRequest=([^&]+)/);
@@ -302,13 +346,23 @@ export const fetchSonarIssues = async (
 
     // Extract duplications, coverage, and security issues
     if (verbose) {
-      console.log(chalk.blue("📊 Fetching duplications, coverage, and security hotspots..."));
+      console.log(
+        chalk.whiteBright("📊 Fetching duplications, coverage, and security hotspots...")
+      );
+      console.log(
+        chalk.whiteBright(
+          `   Using fetch options: ${JSON.stringify(fetchOptions)} for source: ${usedSource}`
+        )
+      );
     }
     const [measures, securityHotspots] = await Promise.all([
       extractor.fetchMeasures(config, fetchOptions).catch((error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
         if (verbose) {
           console.warn(chalk.yellow(`⚠️  Failed to fetch measures: ${errorMessage}`));
+        } else {
+          // In non-verbose mode, still log errors but more concisely
+          console.warn(chalk.yellow(`⚠️  Failed to fetch measures for ${usedSource}`));
         }
         return {};
       }),
@@ -316,6 +370,9 @@ export const fetchSonarIssues = async (
         const errorMessage = error instanceof Error ? error.message : String(error);
         if (verbose) {
           console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots: ${errorMessage}`));
+        } else {
+          // In non-verbose mode, still log errors but more concisely
+          console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots for ${usedSource}`));
         }
         return {};
       }),
@@ -336,7 +393,7 @@ export const fetchSonarIssues = async (
       const measuresPath = path.join(sonarDir, "measures.json");
       fs.writeFileSync(measuresPath, JSON.stringify(measures, null, 2));
       if (verbose) {
-        console.log(chalk.blue(`📁 Saved measures to: ${measuresPath}`));
+        console.log(chalk.whiteBright(`📁 Saved measures to: ${measuresPath}`));
       }
     }
 
@@ -348,7 +405,7 @@ export const fetchSonarIssues = async (
         const hotspotsCount =
           (securityHotspots as { hotspots?: Array<unknown> }).hotspots?.length || 0;
         console.log(
-          chalk.blue(`📁 Saved ${hotspotsCount} security hotspot(s) to: ${hotspotsPath}`)
+          chalk.whiteBright(`📁 Saved ${hotspotsCount} security hotspot(s) to: ${hotspotsPath}`)
         );
       }
     }
@@ -359,7 +416,7 @@ export const fetchSonarIssues = async (
           `✅ Successfully fetched ${issues.issues?.length || 0} issues (source: ${usedSource})`
         )
       );
-      console.log(chalk.blue(`📁 Saved to: ${issuesPath}`));
+      console.log(chalk.whiteBright(`📁 Saved to: ${issuesPath}`));
     }
 
     // Display summary
@@ -383,14 +440,14 @@ export const fetchSonarIssues = async (
       );
 
       if (verbose) {
-        console.log(chalk.blue("\n📊 Issues by severity:"));
+        console.log(chalk.whiteBright("\n📊 Issues by severity:"));
         for (const [severity, count] of sortedEntries) {
           const colorFn = getSeverityColor(severity);
           console.log(colorFn(`  ${severity}: ${count}`));
         }
       } else {
         // Non-verbose: Show table format with colors
-        console.log(chalk.blue("\n📊 Issues by severity:"));
+        console.log(chalk.whiteBright("\n📊 Issues by severity:"));
         formatSeverityTable(severityCounts);
       }
     }
@@ -402,16 +459,22 @@ export const fetchSonarIssues = async (
 
     if (!verbose) {
       console.log();
-      if (metrics.coverage !== null) {
-        console.log(chalk.blue(`Coverage: ${metrics.coverage}%`));
+      if (metrics.coverage !== null && metrics.coverage !== undefined) {
+        console.log(chalk.whiteBright(`Coverage: ${metrics.coverage}%`));
       }
-      if (metrics.duplication !== null) {
-        console.log(chalk.blue(`Duplicated lines: ${metrics.duplication}%`));
+      if (metrics.duplication !== null && metrics.duplication !== undefined) {
+        console.log(chalk.whiteBright(`Duplicated lines: ${metrics.duplication}%`));
       }
-      if (hotspotsCount > 0) {
-        console.log(chalk.blue(`Security hotspots: ${hotspotsCount}`));
-      }
+      // Always show security hotspots count, even if 0
+      console.log(chalk.whiteBright(`Security hotspots: ${hotspotsCount}`));
     }
+
+    // Display final message with SonarQube URL and local file path
+    const sonarUrl = buildSonarProjectUrl(config, fetchOptions);
+    console.log();
+    console.log(
+      chalk.gray(`For further information see ${sonarUrl} and saved issues here: ${issuesPath}`)
+    );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(chalk.red(`❌ Error fetching SonarQube issues: ${errorMessage}`));
