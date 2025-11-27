@@ -1,73 +1,91 @@
-# Welcome to your Lovable project
+# Sonarflow Web
 
-## Project info
+The web interface for Sonarflow - a CLI utility for automating SonarQube issue management with AI integration.
 
-**URL**: https://lovable.dev/projects/809eec10-996e-4025-aa9c-4264d79adbfe
+## Project Overview
 
-## How can I edit this code?
+Sonarflow Web provides a modern, responsive web interface for the Sonarflow project. It showcases features, documentation, and guides for using the Sonarflow CLI tool.
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/809eec10-996e-4025-aa9c-4264d79adbfe) and start prompting.
+- Node.js (v18 or higher recommended)
+- npm, yarn, pnpm, or bun
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Install dependencies
+npm install
+# or
+bun install
 ```
 
-**Edit a file directly in GitHub**
+### Development
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+# Start the development server
+npm run dev
+# or
+bun run dev
+```
 
-**Use GitHub Codespaces**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Build
 
-## What technologies are used for this project?
+```sh
+# Build for production
+npm run build
+# or
+bun run build
+```
+
+### Preview Production Build
+
+```sh
+# Preview the production build
+npm run preview
+# or
+bun run preview
+```
+
+## Technologies
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** - Fast build tool and dev server
+- **React** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - High-quality React components
+- **React Router** - Client-side routing
+- **TanStack Query** - Data fetching and caching
 
-## How can I deploy this project?
+## Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/809eec10-996e-4025-aa9c-4264d79adbfe) and click on Share -> Publish.
+```
+src/
+├── components/     # Reusable React components
+├── pages/         # Page components
+├── layouts/       # Layout components
+├── hooks/         # Custom React hooks
+└── lib/           # Utility functions
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Features
 
-Yes, you can!
+- Modern, responsive design
+- Dark mode support
+- SEO optimized
+- Fast page loads with Vite
+- Type-safe with TypeScript
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+See the main project README for contribution guidelines.
+
+## License
+
+See the main project LICENSE file.
