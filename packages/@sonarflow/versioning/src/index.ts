@@ -3,9 +3,9 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { SonarIssueExtractor } from "@sonarflow/sonar";
 import chalk from "chalk";
 import dotenv from "dotenv";
-import { SonarIssueExtractor } from "@sonarflow/sonar";
 
 dotenv.config();
 
@@ -221,8 +221,10 @@ export const fetchSonarIssues = async (
 
 // Only execute if this file is run directly (not imported)
 // In ESM, we check if the current file matches the entry point
-if (import.meta.url.endsWith(process.argv[1]?.replace(/\\/g, "/") || "") || 
-    (typeof process !== "undefined" && process.argv[1]?.includes("versioning"))) {
+if (
+  import.meta.url.endsWith(process.argv[1]?.replace(/\\/g, "/") || "") ||
+  (typeof process !== "undefined" && process.argv[1]?.includes("versioning"))
+) {
   // Parse command line arguments
   const args = process.argv.slice(2);
   const branchName = args[0] || null;
