@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1-beta.0](https://github.com/davide97g/sonarflow/compare/v1.0.0...v1.0.1-beta.0) (2025-11-27)
+
+
+### Bug Fixes
+
+* update production tag retrieval to exclude beta tags correctly ([400534e](https://github.com/davide97g/sonarflow/commit/400534e91bd5a2ad8f9ac56babfd3b27720c34bd))
+
+
+### Chores
+
+* update schema version to v1.0.1-beta.0 ([b069968](https://github.com/davide97g/sonarflow/commit/b069968b185f5ab3cd3e617983ca2d3547b52422))
+
 ## [1.0.0](https://github.com/davide97g/sonarflow/compare/v1.0.0-beta.8...v1.0.0) (2025-11-27)
 
 
