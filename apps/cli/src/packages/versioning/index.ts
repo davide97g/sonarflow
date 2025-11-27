@@ -1,0 +1,235 @@
+#!/usr/bin/env node
+
+import { execSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { SonarIssueExtractor } from "../sonar/index.js";
+import chalk from "chalk";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+interface Config {
+  repoName: string;
+  gitOrganization: string;
+  sonarProjectKey: string;
+  sonarOrganization?: string;
+  gitProvider: "github" | "bitbucket";
+  outputPath?: string;
+  sonarBaseUrl?: string;
+  publicSonar?: boolean;
+  sonarMode?: "standard" | "custom";
+  rulesFlavor?: "safe" | "vibe-coder" | "yolo";
+  [key: string]: unknown;
+}
+
+interface SonarIssuesResponse {
+  issues?: Array<{ severity?: string; [key: string]: unknown }>;
+  [key: string]: unknown;
+}
+
+/**
+ * Loads configuration from .sonarflowrc.json
+ * @returns Configuration object
+ */
+const loadConfiguration = (): Config => {
+  const configPath = path.join(process.cwd(), ".sonarflowrc.json");
+
+  if (!fs.existsSync(configPath)) {
+    throw new Error("Configuration file not found: .sonarflowrc.json");
+  }
+
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8")) as Config;
+
+  // Validate required configuration
+  if (!config.gitProvider) {
+    throw new Error("gitProvider is required in configuration");
+  }
+
+  if (!["github", "bitbucket"].includes(config.gitProvider)) {
+    throw new Error("gitProvider must be either 'github' or 'bitbucket'");
+  }
+
+  return config;
+};
+
+/**
+ * Detects PR ID based on the configured git provider
+ * @param branch - Current git branch name
+ * @param gitProvider - Git provider (github or bitbucket)
+ * @returns PR ID if found, null otherwise
+ */
+const detectPrId = async (
+  repoName: string,
+  branch: string,
+  organization: string,
+  gitProvider: "github" | "bitbucket"
+): Promise<string | null> => {
+  const extractor = new SonarIssueExtractor();
+  if (gitProvider === "github") {
+    return await extractor.detectGitHubPrId(branch);
+  }
+  if (gitProvider === "bitbucket") {
+    return await extractor.detectBitbucketPrId(branch, repoName, organization);
+  }
+
+  return null;
+};
+
+/**
+ * Fetches SonarQube issues based on configuration and command line arguments
+ * @param branchName - Optional branch name
+ * @param sonarPrLink - Optional SonarQube PR link
+ */
+export const fetchSonarIssues = async (
+  branchName: string | null = null,
+  sonarPrLink: string | null = null
+): Promise<void> => {
+  try {
+    // Load configuration
+    const config = loadConfiguration();
+    console.log(chalk.blue(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
+
+    // Get current git branch
+    const currentBranch =
+      branchName || execSync("git branch --show-current", { encoding: "utf8" }).trim();
+    console.log(chalk.blue(`Current branch: ${currentBranch}`));
+
+    // Initialize SonarQube extractor
+    const extractor = new SonarIssueExtractor();
+
+    let issues: SonarIssuesResponse;
+    let usedSource: string;
+    let fetchOptions: { branch?: string; pullRequest?: string } = {};
+
+    if (sonarPrLink) {
+      // If PR link is provided, fetch issues from that PR
+      console.log(chalk.blue(`Using provided SonarQube PR link: ${sonarPrLink}`));
+      // Extract PR key from link
+      const prKeyMatch = sonarPrLink.match(/pullRequest=([^&]+)/);
+      const prKey = prKeyMatch ? prKeyMatch[1] : null;
+      if (!prKey) {
+        throw new Error(
+          "Invalid SonarQube PR link format. Expected format: https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY"
+        );
+      }
+      issues = await extractor.fetchIssuesForPr(sonarPrLink, config);
+      fetchOptions = { pullRequest: prKey };
+      usedSource = `PR: ${sonarPrLink}`;
+    } else {
+      // Try to automatically detect PR ID from current branch
+      const detectedPrId = await detectPrId(
+        config.repoName,
+        currentBranch,
+        config.gitOrganization,
+        config.gitProvider
+      );
+
+      if (detectedPrId) {
+        // Use detected PR ID
+        console.log(chalk.green(`🚀 Using automatically detected PR ID: ${detectedPrId}`));
+        issues = await extractor.fetchIssuesForPrId(detectedPrId, config);
+        fetchOptions = { pullRequest: detectedPrId };
+        usedSource = `PR #${detectedPrId} (auto-detected from branch: ${currentBranch})`;
+      } else {
+        // Fallback to branch-based approach
+        console.warn(chalk.yellow("📋 No PR detected, falling back to branch-based approach"));
+        issues = await extractor.fetchIssuesForBranch(currentBranch, config);
+        fetchOptions = { branch: currentBranch };
+        usedSource = currentBranch;
+
+        // Fallback to develop if no issues found
+        if (!issues.issues || issues.issues.length === 0) {
+          console.warn(
+            chalk.yellow("No issues found for current branch. Falling back to branch: develop")
+          );
+          issues = await extractor.fetchIssuesForBranch("develop", config);
+          fetchOptions = { branch: "develop" };
+          usedSource = "develop";
+        }
+      }
+    }
+
+    // Extract duplications, coverage, and security issues
+    console.log(chalk.blue("📊 Fetching duplications, coverage, and security hotspots..."));
+    const [measures, securityHotspots] = await Promise.all([
+      extractor.fetchMeasures(config, fetchOptions).catch((error: unknown) => {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.warn(chalk.yellow(`⚠️  Failed to fetch measures: ${errorMessage}`));
+        return {};
+      }),
+      extractor.fetchSecurityHotspots(config, fetchOptions).catch((error: unknown) => {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots: ${errorMessage}`));
+        return {};
+      }),
+    ]);
+
+    // Save issues to file
+    const outputPath = config.outputPath || ".sonarflow/";
+    const sonarDir = path.join(process.cwd(), outputPath);
+    if (!fs.existsSync(sonarDir)) {
+      fs.mkdirSync(sonarDir, { recursive: true });
+    }
+
+    const issuesPath = path.join(sonarDir, "issues.json");
+    fs.writeFileSync(issuesPath, JSON.stringify(issues, null, 2));
+
+    // Save measures (duplications and coverage) if available
+    if (measures && Object.keys(measures).length > 0) {
+      const measuresPath = path.join(sonarDir, "measures.json");
+      fs.writeFileSync(measuresPath, JSON.stringify(measures, null, 2));
+      console.log(chalk.blue(`📁 Saved measures to: ${measuresPath}`));
+    }
+
+    // Save security hotspots if available
+    if (securityHotspots && Object.keys(securityHotspots).length > 0) {
+      const hotspotsPath = path.join(sonarDir, "security-hotspots.json");
+      fs.writeFileSync(hotspotsPath, JSON.stringify(securityHotspots, null, 2));
+      const hotspotsCount =
+        (securityHotspots as { hotspots?: Array<unknown> }).hotspots?.length || 0;
+      console.log(chalk.blue(`📁 Saved ${hotspotsCount} security hotspot(s) to: ${hotspotsPath}`));
+    }
+
+    console.log(
+      chalk.green(
+        `✅ Successfully fetched ${issues.issues?.length || 0} issues (source: ${usedSource})`
+      )
+    );
+    console.log(chalk.blue(`📁 Saved to: ${issuesPath}`));
+
+    // Display summary
+    if (issues.issues && issues.issues.length > 0) {
+      const severityCounts: Record<string, number> = {};
+      for (const issue of issues.issues) {
+        const severity = issue.severity || "UNKNOWN";
+        severityCounts[severity] = (severityCounts[severity] || 0) + 1;
+      }
+
+      console.log(chalk.blue("\n📊 Issues by severity:"));
+      const sortedEntries = Object.entries(severityCounts).sort(([, a], [, b]) => b - a);
+      for (const [severity, count] of sortedEntries) {
+        console.log(chalk.blue(`  ${severity}: ${count}`));
+      }
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`❌ Error fetching SonarQube issues: ${errorMessage}`));
+    process.exit(1);
+  }
+};
+
+// Only execute if this file is run directly (not imported)
+// In ESM, we check if the current file matches the entry point
+if (
+  import.meta.url.endsWith(process.argv[1]?.replace(/\\/g, "/") || "") ||
+  (typeof process !== "undefined" && process.argv[1]?.includes("versioning"))
+) {
+  // Parse command line arguments
+  const args = process.argv.slice(2);
+  const branchName = args[0] || null;
+  const sonarPrLink = args[1] || null;
+
+  // Execute the main function
+  await fetchSonarIssues(branchName, sonarPrLink);
+}

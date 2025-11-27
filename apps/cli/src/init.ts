@@ -377,7 +377,7 @@ const runInit = async (): Promise<void> => {
           : "rule-vibe-coder.md";
     const templateRulePath = path.join(
       __dirname,
-      "../../../packages/@sonarflow/shared/templates/",
+      "../templates/",
       templateFilename
     );
     if (!(await fs.pathExists(templateRulePath))) {

@@ -31,14 +31,12 @@
     },
     "apps/cli": {
       "name": "sonarflow",
-      "version": "1.0.0-beta.4",
+      "version": "1.0.6-beta.0",
       "bin": {
-        "sonarflow": "./dist/cli.js",
+        "sonarflow": "dist/cli.js",
       },
       "dependencies": {
         "@inquirer/prompts": "^7.10.1",
-        "@sonarflow/shared": "workspace:*",
-        "@sonarflow/versioning": "workspace:*",
         "chalk": "^5.6.2",
         "commander": "^14.0.2",
         "dotenv": "^17.2.3",

@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { fetchSonarIssues } from "@sonarflow/versioning";
+import { fetchSonarIssues } from "./packages/versioning/index.js";
 import chalk from "chalk";
 import { Command } from "commander";
 import dotenv from "dotenv";
