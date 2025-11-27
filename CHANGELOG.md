@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/davide97g/sonarflow/compare/v1.1.0...v1.1.1) (2025-11-27)
+
+
+### Bug Fixes
+
+* **cli:** update package.json path to support both development and global installations ([f8c16ea](https://github.com/davide97g/sonarflow/commit/f8c16eab671371532eb6874647e15d74ec7bc6da))
+
 ## [1.1.0](https://github.com/davide97g/sonarflow/compare/v1.0.9...v1.1.0) (2025-11-27)
 
 
