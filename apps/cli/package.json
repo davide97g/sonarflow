@@ -5,10 +5,10 @@
   "type": "module",
   "main": "./dist/cli.js",
   "bin": {
-    "sonarflow": "./dist/cli.js"
+    "sonarflow": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsgo",
+    "build": "tsgo && cp ../../README.md dist/",
     "dev": "tsgo --watch",
     "lint": "biome lint src",
     "lint:fix": "biome lint --write src",
