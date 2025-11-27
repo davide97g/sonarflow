@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/davide97g/sonarflow/compare/v1.2.0...v1.3.0) (2025-11-27)
+
+
+### Features
+
+* **cli:** expand Sonar issue extraction to include quality gate status and enhance metric extraction with detailed reporting ([08f76d2](https://github.com/davide97g/sonarflow/commit/08f76d268f83c6211544ab3be93ca19dfd8618b2))
+
 ## [1.2.0](https://github.com/davide97g/sonarflow/compare/v1.1.1...v1.2.0) (2025-11-27)
 
 
