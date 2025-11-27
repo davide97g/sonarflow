@@ -36,10 +36,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "davide97g"
+          registry-url: "https://registry.npmjs.org"
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Configure Git
         run: |
@@ -107,16 +106,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to GitHub Packages (latest)
+      - name: Publish to npm (latest)
         if: steps.release.outputs.tag != ''
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          # Ensure .npmrc is correctly configured for GitHub Packages
-          # The setup-node action should create this, but we verify/update it
-          echo "davide97g:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" >> .npmrc
-          
+          # Configure npm registry
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+
           # Verify package.json version matches the tag
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           TAG_VERSION=$(echo "${{ steps.release.outputs.tag }}" | sed 's/^v//')
@@ -126,19 +123,37 @@ jobs:
             exit 1
           fi
 
-          # Verify .npmrc configuration
-          echo "Verifying .npmrc configuration:"
-          cat .npmrc
-
-          # Attempt to publish with better error handling
-          npm publish --tag latest || {
-            echo "Publish failed. Checking if version already exists..."
-            # If publish fails, check if it's because the version already exists
-            npm view davide97g/sonarflow@$PACKAGE_VERSION && {
-              echo "Version $PACKAGE_VERSION already exists in registry, skipping publish"
-              exit 0
-            } || {
-              echo "Publish failed for unknown reason"
-              exit 1
+          # Function to publish a package
+          publish_package() {
+            local package_dir=$1
+            local package_name=$2
+            
+            echo "Publishing $package_name from $package_dir..."
+            cd "$package_dir"
+            
+            npm publish --tag latest --access public || {
+              echo "Checking if $package_name@$PACKAGE_VERSION already exists..."
+              if npm view "$package_name@$PACKAGE_VERSION" > /dev/null 2>&1; then
+                echo "Version $PACKAGE_VERSION already exists, skipping"
+              else
+                echo "Publish failed for $package_name"
+                exit 1
+              fi
             }
+            
+            cd - > /dev/null
           }
+
+          # Publish all packages that should be published
+          echo "Publishing packages to npm..."
+
+          # Publish @sonarflow packages
+          publish_package "packages/@sonarflow/shared" "@sonarflow/shared"
+          publish_package "packages/@sonarflow/sonar" "@sonarflow/sonar"
+          publish_package "packages/@sonarflow/versioning" "@sonarflow/versioning"
+
+          # Publish apps
+          publish_package "apps/cli" "@sonarflow/cli"
+          publish_package "apps/mcp-server" "@sonarflow/mcp-server"
+
+          echo "All packages published successfully!"
