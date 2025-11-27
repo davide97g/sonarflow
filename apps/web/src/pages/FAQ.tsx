@@ -146,7 +146,7 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
           <p>Use the update command to check and install the latest version:</p>
           <CodeBlock code="npx sonarflow update" />
           <p>Or reinstall manually:</p>
-          <CodeBlock code="npm install -g davide97g/sonarflow@latest" />
+          <CodeBlock code="npm install -g sonarflow@latest" />
         </div>
       ),
     },

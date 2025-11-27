@@ -187,14 +187,6 @@ const Docs = () => {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">VSCode</h3>
-                    <p className="text-muted-foreground mb-3">
-                      Use the Sonarflow extension for VSCode:
-                    </p>
-                    <CodeBlock code="code --install-extension davide97g.sonarflow" />
-                  </div>
-
-                  <div>
                     <h3 className="text-lg font-semibold mb-3">Windsurf</h3>
                     <p className="text-muted-foreground mb-3">
                       Windsurf automatically detects{" "}

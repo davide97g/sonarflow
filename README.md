@@ -16,40 +16,16 @@ CLI utility for fetching SonarQube issues. Automatically detects PR IDs from bra
 
 Since this package is published to GitHub Packages, you'll need to authenticate to install it.
 
-### 1. Authenticate to GitHub Packages
-
-Create or edit your `~/.npmrc` file to include:
+### Install the package
 
 ```bash
-# .npmrc
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
-```
-
-Or use npm login:
-
-```bash
-npm login --scope=davide97g --auth-type=legacy --registry=https://npm.pkg.github.com
-```
-
-### 2. Configure project .npmrc
-
-Add the following to your project's `.npmrc` file (or create one):
-
-```bash
-# .npmrc
-davide97g:registry=https://npm.pkg.github.com
-```
-
-### 3. Install the package
-
-```bash
-npm install davide97g/sonarflow
+npm install sonarflow
 ```
 
 Or install globally:
 
 ```bash
-npm install -g davide97g/sonarflow
+npm install -g sonarflow
 ```
 
 ## Quick Start

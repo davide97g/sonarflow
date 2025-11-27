@@ -31,7 +31,7 @@ Feature Branch → develop → main
 
 **Install beta version:**
 ```bash
-npm install davide97g/sonarflow@beta
+npm install sonarflow@beta
 ```
 
 #### 2. Production Releases (`main` branch)
@@ -54,9 +54,9 @@ npm install davide97g/sonarflow@beta
 
 **Install production version:**
 ```bash
-npm install davide97g/sonarflow@latest
+npm install sonarflow@latest
 # or simply
-npm install davide97g/sonarflow
+npm install sonarflow
 ```
 
 ## Commit Message Format

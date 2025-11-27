@@ -61,11 +61,11 @@ const GetStarted = () => {
               <div className="space-y-3">
                 <div>
                   <p className="text-sm font-medium mb-2">Global Installation:</p>
-                  <CodeBlock code="npm install -g davide97g/sonarflow" />
+                  <CodeBlock code="npm install -g sonarflow" />
                 </div>
                 <div>
                   <p className="text-sm font-medium mb-2">Local Installation:</p>
-                  <CodeBlock code="npm install --save-dev davide97g/sonarflow" />
+                  <CodeBlock code="npm install --save-dev sonarflow" />
                 </div>
               </div>
             </CardContent>

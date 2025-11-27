@@ -1,6 +1,6 @@
 # Release Guide
 
-Quick reference for releasing new versions of `davide97g/sonarflow`.
+Quick reference for releasing new versions of `sonarflow`.
 
 ## Automated Releases (Primary Method)
 
