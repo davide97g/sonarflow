@@ -139,14 +139,4 @@ program
     await checkForUpdates();
   });
 
-program
-  .command("mcp")
-  .description("Run MCP server in stdio mode")
-  .action(() => {
-    // Spawn MCP server as a separate process
-    // Calculate relative path from CLI dist to MCP server dist
-    const mcpServerPath = path.relative(__dirname, path.join(__dirname, "../../mcp-server/dist/server.js"));
-    runNodeScript(mcpServerPath, []);
-  });
-
 program.parse(process.argv);

@@ -11,7 +11,6 @@ import Docs from "./pages/Docs";
 import Contribute from "./pages/Contribute";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
-import MCP from "./pages/MCP";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,7 +30,6 @@ const App = () => (
               <Route path="/contribute" element={<Contribute />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/mcp" element={<MCP />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </MainLayout>

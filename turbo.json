@@ -6,6 +6,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "@sonarflow/versioning#build": {
+      "dependsOn": ["@sonarflow/sonar#build"]
+    },
+    "@sonarflow/cli#build": {
+      "dependsOn": ["@sonarflow/shared#build", "@sonarflow/versioning#build"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
@@ -40,4 +46,3 @@
     }
   }
 }
-

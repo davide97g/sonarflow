@@ -32,8 +32,7 @@
     { "path": "./packages/@sonarflow/shared" },
     { "path": "./packages/@sonarflow/sonar" },
     { "path": "./packages/@sonarflow/versioning" },
-    { "path": "./apps/cli" },
-    { "path": "./apps/mcp-server" }
+    { "path": "./apps/cli" }
   ],
   "exclude": ["node_modules", "dist", "**/dist", "**/node_modules"]
 }
