@@ -69,6 +69,24 @@ const runInit = async (): Promise<void> => {
   const schemaVersion = sonarflowPackageJson.version;
   const schemaUrl = `https://raw.githubusercontent.com/davide97g/sonarflow/v${schemaVersion}/schemas/sonarflowrc.schema.json`;
 
+  // Load existing .sonarflowrc.json if present
+  const configPath = path.join(process.cwd(), ".sonarflowrc.json");
+  let existingConfig: Partial<Config> = {};
+  try {
+    if (await fs.pathExists(configPath)) {
+      existingConfig = (await fs.readJson(configPath)) as Partial<Config>;
+      console.log(chalk.blue("📋 Found existing configuration file, using as defaults\n"));
+    }
+  } catch (error) {
+    console.warn(
+      chalk.yellow(
+        `Warning: could not read existing .sonarflowrc.json: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+    );
+  }
+
   // Load package.json to derive sensible defaults
   const pkgPath = path.join(process.cwd(), "package.json");
   let pkg: PackageJson = {};
@@ -87,14 +105,18 @@ const runInit = async (): Promise<void> => {
   }
 
   const defaultRepoName =
-    typeof pkg.name === "string" && pkg.name.trim()
+    existingConfig.repoName ??
+    (typeof pkg.name === "string" && pkg.name.trim()
       ? pkg.name.trim()
-      : path.basename(process.cwd());
-  const defaultGitProvider = pkg.repository?.url?.includes("bitbucket") ? "bitbucket" : "github";
-  const defaultVisibility = pkg.private === true ? "private" : "public";
-  const defaultGitOrganization = defaultRepoName.includes("@")
-    ? defaultRepoName.split("/")[0]
-    : undefined;
+      : path.basename(process.cwd()));
+  const defaultGitProvider =
+    existingConfig.gitProvider ??
+    (pkg.repository?.url?.includes("bitbucket") ? "bitbucket" : "github");
+  const defaultVisibility =
+    existingConfig.repositoryVisibility ?? (pkg.private === true ? "private" : "public");
+  const defaultGitOrganization =
+    existingConfig.gitOrganization ??
+    (defaultRepoName.includes("@") ? defaultRepoName.split("/")[0] : undefined);
 
   const autoDetectAiEditor = () => {
     if (fs.pathExistsSync(path.join(process.cwd(), ".cursor"))) {
@@ -108,7 +130,7 @@ const runInit = async (): Promise<void> => {
     }
     return "other";
   };
-  const defaultAiEditor = autoDetectAiEditor();
+  const defaultAiEditor = existingConfig.aiEditor ?? autoDetectAiEditor();
 
   const autoDetectSonarModeAndProjectKey = () => {
     const connectedModePath = path.join(process.cwd(), ".sonarlint/connectedMode.json");
@@ -126,15 +148,15 @@ const runInit = async (): Promise<void> => {
       sonarProjectKey: "",
     };
   };
-  const {
-    sonarMode: defaultSonarMode,
-    sonarProjectKey: defaultSonarProjectKey,
-    sonarQubeUri: defaultSonarQubeUri,
-  } = autoDetectSonarModeAndProjectKey();
+  const autoDetectedSonar = autoDetectSonarModeAndProjectKey();
+  const defaultSonarMode = existingConfig.sonarMode ?? autoDetectedSonar.sonarMode;
+  const defaultSonarProjectKey =
+    existingConfig.sonarProjectKey ?? autoDetectedSonar.sonarProjectKey;
+  const defaultSonarQubeUri = existingConfig.sonarBaseUrl ?? autoDetectedSonar.sonarQubeUri;
 
-  const defaultSonarOrganization = defaultRepoName.includes("@")
-    ? defaultRepoName.split("/")[0]
-    : undefined;
+  const defaultSonarOrganization =
+    existingConfig.sonarOrganization ??
+    (defaultRepoName.includes("@") ? defaultRepoName.split("/")[0] : undefined);
 
   const getDefaultRulePath = (
     editor: "cursor" | "copilot (vscode)" | "windsurf" | "other"
@@ -258,10 +280,10 @@ const runInit = async (): Promise<void> => {
         { name: "vibe-coder", value: "vibe-coder" },
         { name: "yolo", value: "yolo" },
       ],
-      default: "safe",
+      default: existingConfig.rulesFlavor ?? "safe",
     });
 
-    const defaultRulePath = getDefaultRulePath(aiEditor);
+    const defaultRulePath = existingConfig.rulePath ?? getDefaultRulePath(aiEditor);
     const rulePath = await input({
       message: "Rule path:",
       default: defaultRulePath,

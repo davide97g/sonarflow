@@ -14,7 +14,9 @@
     "lint:fix": "biome lint --write src",
     "format": "biome format --write src",
     "check": "biome check src",
-    "check:fix": "biome check --write src"
+    "check:fix": "biome check --write src",
+    "init": "bun run src/init.ts",
+    "fetch": "bun run src/cli.ts fetch"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.10.1",
