@@ -1,5 +1,5 @@
 {
-  "name": "@sonarflow/cli",
+  "name": "sonarflow",
   "version": "1.0.0-beta.4",
   "description": "CLI utility for fetching SonarQube issues and integrating with Bitbucket/GitHub PR workflows",
   "type": "module",

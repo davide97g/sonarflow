@@ -12,7 +12,7 @@ This repository uses automated versioning and releases via GitHub Actions.
 **Behavior:**
 - Creates beta/pre-release versions (e.g., `v0.2.4-beta.1`, `v0.2.4-beta.2`)
 - Only releases if there are version-bump commits (`feat:`, `fix:`, `perf:`, `refactor:`, or `BREAKING CHANGE:`)
-- Publishes all packages to npm with `beta` tag
+- Publishes the CLI package as `sonarflow` to npm with `beta` tag
 - Skips release if only documentation or chore commits
 
 **Version Format:**
@@ -29,7 +29,7 @@ This repository uses automated versioning and releases via GitHub Actions.
   - `fix:` → patch bump (0.2.3 → 0.2.4)
   - `BREAKING CHANGE:` → major bump (0.2.3 → 1.0.0)
 - Only releases if there are version-bump commits
-- Publishes all packages to npm with `latest` tag
+- Publishes the CLI package as `sonarflow` to npm with `latest` tag
 - Creates GitHub Release with CHANGELOG.md content
 
 **Version Format:**
@@ -52,12 +52,7 @@ Both workflows follow this process:
    - Update `CHANGELOG.md`
    - Create git tag
 8. **Push** changes and tags to repository
-9. **Publish** all packages to npm:
-   - `@sonarflow/shared`
-   - `@sonarflow/sonar`
-   - `@sonarflow/versioning`
-   - `@sonarflow/cli`
-   - `@sonarflow/mcp-server`
+9. **Publish** the CLI package to npm as `sonarflow`
 
 ### Commit Message Requirements
 
@@ -83,12 +78,12 @@ develop branch:
   commit: "feat: add new feature"
   → GitHub Actions triggers
   → Creates v0.2.4-beta.1
-  → Publishes all packages to npm with 'beta' tag
+  → Publishes sonarflow package to npm with 'beta' tag
 
 main branch (merge from develop):
   → GitHub Actions triggers
   → Creates v0.2.4 (production)
-  → Publishes all packages to npm with 'latest' tag
+  → Publishes sonarflow package to npm with 'latest' tag
   → Creates GitHub Release
 ```
 
@@ -103,20 +98,14 @@ Releases are automatically skipped if:
 
 **Beta version:**
 ```bash
-npm install @sonarflow/cli@beta
-# or any other package
-npm install @sonarflow/sonar@beta
-npm install @sonarflow/mcp-server@beta
+npm install sonarflow@beta
 ```
 
 **Production version:**
 ```bash
-npm install @sonarflow/cli@latest
-# or any other package
-npm install @sonarflow/sonar@latest
-npm install @sonarflow/mcp-server@latest
+npm install sonarflow@latest
 # or without tag (defaults to latest)
-npm install @sonarflow/cli
+npm install sonarflow
 ```
 
 ### Troubleshooting
@@ -133,7 +122,7 @@ npm install @sonarflow/cli
 
 **Publishing fails:**
 - Ensure `NPM_TOKEN` secret is set in GitHub Actions secrets
-- Verify the npm token has publish permissions for the `@sonarflow` scope
-- Check that package names match in `package.json` files
-- Verify all packages have been built before publishing
+- Verify the npm token has publish permissions for the `sonarflow` package
+- Check that package name matches in `apps/cli/package.json` (should be `sonarflow`)
+- Verify the CLI package has been built before publishing
 

@@ -35,7 +35,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -109,12 +109,12 @@ jobs:
           # Configure npm registry
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
 
-          # Verify package.json version matches the tag
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          # Verify CLI package.json version matches the tag
+          PACKAGE_VERSION=$(node -p "require('./apps/cli/package.json').version")
           TAG_VERSION=$(echo "${{ steps.release.outputs.tag }}" | sed 's/^v//')
 
           if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-            echo "Error: package.json version ($PACKAGE_VERSION) does not match tag ($TAG_VERSION)"
+            echo "Error: CLI package.json version ($PACKAGE_VERSION) does not match tag ($TAG_VERSION)"
             exit 1
           fi
 
@@ -139,16 +139,8 @@ jobs:
             cd - > /dev/null
           }
 
-          # Publish all packages that should be published
-          echo "Publishing packages to npm with beta tag..."
-          
-          # Publish @sonarflow packages
-          publish_package "packages/@sonarflow/shared" "@sonarflow/shared"
-          publish_package "packages/@sonarflow/sonar" "@sonarflow/sonar"
-          publish_package "packages/@sonarflow/versioning" "@sonarflow/versioning"
-          
-          # Publish apps
-          publish_package "apps/cli" "@sonarflow/cli"
-          publish_package "apps/mcp-server" "@sonarflow/mcp-server"
-          
-          echo "All packages published successfully!"
+          # Publish the CLI package as "sonarflow"
+          echo "Publishing sonarflow package to npm with beta tag..."
+          publish_package "apps/cli" "sonarflow"
+
+          echo "Package published successfully!"
