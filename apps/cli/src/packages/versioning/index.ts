@@ -139,6 +139,288 @@ const getSeverityOrder = (severity: string): number => {
 };
 
 /**
+ * Gets emoji and color for a metric based on its category
+ */
+const getMetricStyle = (metricKey: string): { emoji: string; color: typeof chalk } => {
+  const key = metricKey.toLowerCase();
+
+  // Coverage & Testing metrics (Green/Blue)
+  if (
+    key.includes("coverage") ||
+    key.includes("test") ||
+    key.includes("uncovered") ||
+    key.includes("line_coverage") ||
+    key.includes("branch_coverage")
+  ) {
+    return { emoji: "📊", color: chalk.green };
+  }
+
+  // Duplication metrics (Orange)
+  if (key.includes("duplicated") || key.includes("duplication")) {
+    return { emoji: "📋", color: chalk.hex("#FF8C00") }; // Orange
+  }
+
+  // Security metrics (Red)
+  if (key.includes("security") || key.includes("vulnerability") || key.includes("hotspot")) {
+    return { emoji: "🔒", color: chalk.red };
+  }
+
+  // Reliability & Bugs (Yellow/Orange)
+  if (key.includes("reliability") || key.includes("bug") || key.includes("error")) {
+    return { emoji: "🐛", color: chalk.yellow };
+  }
+
+  // Maintainability & Code Quality (Purple)
+  if (
+    key.includes("sqale") ||
+    key.includes("technical_debt") ||
+    key.includes("maintainability") ||
+    key.includes("code_smell") ||
+    key.includes("debt")
+  ) {
+    return { emoji: "🔧", color: chalk.hex("#9370DB") }; // Purple
+  }
+
+  // Violations & Issues (Red/Orange)
+  if (
+    key.includes("violation") ||
+    key.includes("blocker") ||
+    key.includes("critical") ||
+    key.includes("major")
+  ) {
+    if (key.includes("blocker") || key.includes("critical")) {
+      return { emoji: "🚨", color: chalk.red };
+    }
+    return { emoji: "⚠️", color: chalk.hex("#FF8C00") }; // Orange
+  }
+
+  // Minor/Info violations (Yellow)
+  if (key.includes("minor") || key.includes("info")) {
+    return { emoji: "ℹ️", color: chalk.yellow };
+  }
+
+  // Rating metrics (Blue)
+  if (key.includes("rating")) {
+    return { emoji: "⭐", color: chalk.blue };
+  }
+
+  // Lines & Size metrics (Cyan)
+  if (
+    key.includes("lines") ||
+    key.includes("ncloc") ||
+    key.includes("statements") ||
+    key.includes("files")
+  ) {
+    return { emoji: "📝", color: chalk.cyan };
+  }
+
+  // Default (Gray)
+  return { emoji: "📈", color: chalk.gray };
+};
+
+/**
+ * Formats and displays quality gate status with metric comparison
+ */
+const formatQualityGateStatus = (
+  qualityGateStatus: Record<string, unknown>,
+  projectMetrics: Record<string, string | number>
+): void => {
+  const projectStatus = qualityGateStatus.projectStatus as
+    | {
+        status?: string;
+        conditions?: Array<{
+          status?: string;
+          metricKey?: string;
+          comparator?: string;
+          errorThreshold?: string;
+          warningThreshold?: string;
+          actualValue?: string;
+          periodIndex?: number;
+        }>;
+      }
+    | undefined;
+
+  if (!projectStatus) {
+    return;
+  }
+
+  const status = projectStatus.status || "UNKNOWN";
+  const conditions = projectStatus.conditions || [];
+
+  // Color mapping for status
+  const statusColorMap: Record<string, typeof chalk> = {
+    OK: chalk.green,
+    WARN: chalk.yellow,
+    ERROR: chalk.red,
+  };
+
+  const statusColor = statusColorMap[status] || chalk.white;
+  const statusIcon = status === "OK" ? "✅" : status === "WARN" ? "⚠️" : "❌";
+
+  console.log();
+  console.log(chalk.whiteBright("🚪 Quality Gate Status:"));
+  console.log(statusColor(`  ${statusIcon} ${status}`));
+
+  if (conditions.length > 0) {
+    console.log();
+    console.log(chalk.whiteBright("  Conditions & Metrics Comparison:"));
+
+    // Calculate column widths (accounting for emoji + space = 3 chars, plus extra padding)
+    const maxMetricLength =
+      Math.max(
+        ...conditions.map((c) => {
+          const metricKey = c.metricKey || "";
+          const { emoji } = getMetricStyle(metricKey);
+          const displayName = metricKey
+            .split("_")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+          return (emoji + " " + displayName).length;
+        }),
+        "METRIC".length
+      ) + 3; // Add extra padding for better alignment
+    const maxStatusLength = Math.max(
+      ...conditions.map((c) => (c.status || "").length),
+      "STATUS".length
+    );
+    const maxActualLength = Math.max(
+      ...conditions.map((c) => (c.actualValue || "-").length),
+      "ACTUAL".length,
+      10
+    );
+    const maxThresholdLength = Math.max(
+      ...conditions.map((c) => (c.errorThreshold || c.warningThreshold || "-").length),
+      "THRESHOLD".length,
+      10
+    );
+    // Print header
+    const header = `  ┌${"─".repeat(maxMetricLength + 2)}┬${"─".repeat(maxStatusLength + 2)}┬${"─".repeat(maxActualLength + 2)}┬${"─".repeat(maxThresholdLength + 2)}┐`;
+    const footer = `  └${"─".repeat(maxMetricLength + 2)}┴${"─".repeat(maxStatusLength + 2)}┴${"─".repeat(maxActualLength + 2)}┴${"─".repeat(maxThresholdLength + 2)}┘`;
+    const separator = `  ├${"─".repeat(maxMetricLength + 2)}┼${"─".repeat(maxStatusLength + 2)}┼${"─".repeat(maxActualLength + 2)}┼${"─".repeat(maxThresholdLength + 2)}┤`;
+
+    console.log(header);
+    console.log(
+      `  │ ${"METRIC".padEnd(maxMetricLength)} │ ${"STATUS".padEnd(maxStatusLength)} │ ${"ACTUAL".padStart(maxActualLength)} │ ${"THRESHOLD".padStart(maxThresholdLength)} │`
+    );
+    console.log(separator);
+
+    // Print conditions
+    for (const condition of conditions) {
+      const metricKey = condition.metricKey || "UNKNOWN";
+      const conditionStatus = condition.status || "UNKNOWN";
+      const actualValue = condition.actualValue || "-";
+      const errorThreshold = condition.errorThreshold || "";
+      const warningThreshold = condition.warningThreshold || "";
+      const threshold = errorThreshold || warningThreshold || "-";
+      const comparator = condition.comparator || "";
+
+      // Get emoji and color for the metric
+      const { emoji, color: metricColor } = getMetricStyle(metricKey);
+
+      // Format metric key for display (remove underscores, capitalize)
+      const displayMetric = `${emoji} ${metricKey
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(" ")}`;
+
+      // Color based on condition status
+      const conditionIcon = conditionStatus === "OK" ? "✓" : conditionStatus === "WARN" ? "⚠" : "✗";
+      const statusColor = statusColorMap[conditionStatus] || chalk.white;
+
+      // Format threshold with comparator
+      let thresholdDisplay = threshold;
+      if (threshold !== "-" && comparator) {
+        const comparatorSymbol =
+          comparator === "GT" ? ">" : comparator === "LT" ? "<" : comparator === "EQ" ? "=" : "";
+        thresholdDisplay = `${comparatorSymbol} ${threshold}`;
+      }
+
+      // Build the line with metric color for metric name, status color for status
+      const metricPart = metricColor(displayMetric.padEnd(maxMetricLength));
+      const statusPart = statusColor(
+        (conditionIcon + " " + conditionStatus).padEnd(maxStatusLength)
+      );
+      const line = `  │ ${metricPart} │ ${statusPart} │ ${actualValue.padStart(maxActualLength)} │ ${thresholdDisplay.padStart(maxThresholdLength)} │`;
+      console.log(line);
+    }
+
+    console.log(footer);
+
+    // Also show related overall metrics (not just "new_" metrics)
+    const relatedMetrics: Array<{ key: string; value: string | number }> = [];
+    const shownMetricKeys = new Set(conditions.map((c) => c.metricKey));
+
+    // Find related metrics (e.g., if new_duplicated_lines_density is shown, also show duplicated_lines_density)
+    for (const condition of conditions) {
+      const metricKey = condition.metricKey || "";
+      if (metricKey.startsWith("new_")) {
+        const baseMetric = metricKey.replace(/^new_/, "");
+        if (projectMetrics[baseMetric] !== undefined && !shownMetricKeys.has(baseMetric)) {
+          relatedMetrics.push({ key: baseMetric, value: projectMetrics[baseMetric] });
+          shownMetricKeys.add(baseMetric);
+        }
+      }
+    }
+
+    // Also show key metrics that are commonly checked
+    const keyMetrics = [
+      "duplicated_lines_density",
+      "coverage",
+      "bugs",
+      "vulnerabilities",
+      "code_smells",
+      "security_hotspots",
+      "security_rating",
+      "reliability_rating",
+      "sqale_rating",
+    ];
+
+    for (const keyMetric of keyMetrics) {
+      if (
+        projectMetrics[keyMetric] !== undefined &&
+        !shownMetricKeys.has(keyMetric) &&
+        !relatedMetrics.some((m) => m.key === keyMetric)
+      ) {
+        relatedMetrics.push({ key: keyMetric, value: projectMetrics[keyMetric] });
+      }
+    }
+
+    if (relatedMetrics.length > 0) {
+      console.log();
+      console.log(chalk.whiteBright("  Related Project Metrics:"));
+      for (const { key, value } of relatedMetrics) {
+        const displayKey = key
+          .split("_")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ");
+        const { emoji, color } = getMetricStyle(key);
+        console.log(color(`    ${emoji} ${displayKey}: ${value}`));
+      }
+    }
+  } else {
+    // If no conditions, show available project metrics
+    console.log();
+    console.log(chalk.whiteBright("  Available Project Metrics:"));
+    const metricEntries = Object.entries(projectMetrics).slice(0, 20); // Show first 20
+    if (metricEntries.length > 0) {
+      for (const [key, value] of metricEntries) {
+        const displayKey = key
+          .split("_")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ");
+        const { emoji, color } = getMetricStyle(key);
+        console.log(color(`    ${emoji} ${displayKey}: ${value}`));
+      }
+      if (Object.keys(projectMetrics).length > 20) {
+        console.log(
+          chalk.gray(`    ... and ${Object.keys(projectMetrics).length - 20} more metrics`)
+        );
+      }
+    }
+  }
+};
+
+/**
  * Formats a table for issues by severity with colors
  */
 const formatSeverityTable = (severityCounts: Record<string, number>): void => {
@@ -184,7 +466,80 @@ const formatSeverityTable = (severityCounts: Record<string, number>): void => {
 };
 
 /**
- * Extracts coverage and duplication percentages from measures
+ * Extracts all metrics from measures, issues, and security hotspots
+ */
+const extractAllMetrics = (
+  measures: Record<string, unknown>,
+  issues: SonarIssuesResponse,
+  securityHotspots: Record<string, unknown>
+): Record<string, string | number> => {
+  const metrics: Record<string, string | number> = {};
+
+  // Extract measures
+  const component = measures.component as
+    | { measures?: Array<{ metric?: string; value?: string }> }
+    | undefined;
+
+  if (component?.measures) {
+    for (const measure of component.measures) {
+      if (measure.metric && measure.value !== undefined && measure.value !== null) {
+        // Try to parse as number, otherwise keep as string
+        const numValue = Number.parseFloat(measure.value);
+        metrics[measure.metric] = Number.isNaN(numValue) ? measure.value : numValue;
+      }
+    }
+  }
+
+  // Extract issue counts by type and severity
+  if (issues.issues && Array.isArray(issues.issues)) {
+    let bugs = 0;
+    let vulnerabilities = 0;
+    let codeSmells = 0;
+    const severityCounts: Record<string, number> = {};
+
+    for (const issue of issues.issues) {
+      const type = (issue.type as string)?.toUpperCase();
+      const severity = (issue.severity as string)?.toUpperCase() || "UNKNOWN";
+
+      if (type === "BUG") bugs++;
+      else if (type === "VULNERABILITY") vulnerabilities++;
+      else if (type === "CODE_SMELL") codeSmells++;
+
+      severityCounts[severity] = (severityCounts[severity] || 0) + 1;
+    }
+
+    metrics.violations = issues.issues.length;
+    metrics.bugs = bugs;
+    metrics.vulnerabilities = vulnerabilities;
+    metrics.code_smells = codeSmells;
+    metrics.blocker_violations = severityCounts.BLOCKER || 0;
+    metrics.critical_violations = severityCounts.CRITICAL || 0;
+    metrics.major_violations = severityCounts.MAJOR || 0;
+    metrics.minor_violations = severityCounts.MINOR || 0;
+    metrics.info_violations = severityCounts.INFO || 0;
+  }
+
+  // Extract security hotspots (only if not already in measures)
+  const hotspots = securityHotspots.hotspots as Array<unknown> | undefined;
+  if (hotspots && metrics.security_hotspots === undefined) {
+    metrics.security_hotspots = hotspots.length;
+    // Count by status
+    let reviewed = 0;
+    let toReview = 0;
+    for (const hotspot of hotspots) {
+      const status = (hotspot as { status?: string })?.status?.toUpperCase();
+      if (status === "REVIEWED") reviewed++;
+      else toReview++;
+    }
+    metrics.security_hotspots_reviewed = reviewed;
+    metrics.security_hotspots_to_review = toReview;
+  }
+
+  return metrics;
+};
+
+/**
+ * Extracts coverage and duplication percentages from measures (for backward compatibility)
  */
 const extractMetrics = (
   measures: Record<string, unknown>
@@ -344,10 +699,12 @@ export const fetchSonarIssues = async (
       }
     }
 
-    // Extract duplications, coverage, and security issues
+    // Extract duplications, coverage, security issues, and quality gate status
     if (verbose) {
       console.log(
-        chalk.whiteBright("📊 Fetching duplications, coverage, and security hotspots...")
+        chalk.whiteBright(
+          "📊 Fetching duplications, coverage, security hotspots, and quality gate status..."
+        )
       );
       console.log(
         chalk.whiteBright(
@@ -355,7 +712,7 @@ export const fetchSonarIssues = async (
         )
       );
     }
-    const [measures, securityHotspots] = await Promise.all([
+    const [measures, securityHotspots, qualityGateStatus] = await Promise.all([
       extractor.fetchMeasures(config, fetchOptions).catch((error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
         if (verbose) {
@@ -373,6 +730,16 @@ export const fetchSonarIssues = async (
         } else {
           // In non-verbose mode, still log errors but more concisely
           console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots for ${usedSource}`));
+        }
+        return {};
+      }),
+      extractor.fetchQualityGateStatus(config, fetchOptions).catch((error: unknown) => {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (verbose) {
+          console.warn(chalk.yellow(`⚠️  Failed to fetch quality gate status: ${errorMessage}`));
+        } else {
+          // In non-verbose mode, still log errors but more concisely
+          console.warn(chalk.yellow(`⚠️  Failed to fetch quality gate status for ${usedSource}`));
         }
         return {};
       }),
@@ -407,6 +774,15 @@ export const fetchSonarIssues = async (
         console.log(
           chalk.whiteBright(`📁 Saved ${hotspotsCount} security hotspot(s) to: ${hotspotsPath}`)
         );
+      }
+    }
+
+    // Save quality gate status if available
+    if (qualityGateStatus && Object.keys(qualityGateStatus).length > 0) {
+      const qualityGatePath = path.join(sonarDir, "quality-gate.json");
+      fs.writeFileSync(qualityGatePath, JSON.stringify(qualityGateStatus, null, 2));
+      if (verbose) {
+        console.log(chalk.whiteBright(`📁 Saved quality gate status to: ${qualityGatePath}`));
       }
     }
 
@@ -454,8 +830,14 @@ export const fetchSonarIssues = async (
 
     // Extract and display metrics (coverage, duplication, security hotspots)
     const metrics = extractMetrics(measures);
-    const hotspotsCount =
-      (securityHotspots as { hotspots?: Array<unknown> })?.hotspots?.length || 0;
+
+    // Extract all project metrics for quality gate comparison
+    const allProjectMetrics = extractAllMetrics(measures, issues, securityHotspots);
+
+    // Display quality gate status if available with metric comparison
+    if (qualityGateStatus && Object.keys(qualityGateStatus).length > 0) {
+      formatQualityGateStatus(qualityGateStatus, allProjectMetrics);
+    }
 
     if (!verbose) {
       console.log();
@@ -465,8 +847,6 @@ export const fetchSonarIssues = async (
       if (metrics.duplication !== null && metrics.duplication !== undefined) {
         console.log(chalk.whiteBright(`Duplicated lines: ${metrics.duplication}%`));
       }
-      // Always show security hotspots count, even if 0
-      console.log(chalk.whiteBright(`Security hotspots: ${hotspotsCount}`));
     }
 
     // Display final message with SonarQube URL and local file path

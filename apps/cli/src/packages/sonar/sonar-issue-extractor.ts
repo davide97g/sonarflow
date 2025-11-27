@@ -497,13 +497,7 @@ export class SonarIssueExtractor {
     const params = new URLSearchParams({
       component: componentKey,
       metricKeys: [
-        "duplicated_lines",
-        "duplicated_lines_density",
-        "duplicated_blocks",
-        "duplicated_files",
-        "new_duplicated_lines",
-        "new_duplicated_lines_density",
-        "new_duplicated_blocks",
+        // Coverage metrics
         "coverage",
         "line_coverage",
         "branch_coverage",
@@ -514,6 +508,49 @@ export class SonarIssueExtractor {
         "uncovered_conditions",
         "new_uncovered_lines",
         "new_uncovered_conditions",
+        // Duplication metrics
+        "duplicated_lines",
+        "duplicated_lines_density",
+        "duplicated_blocks",
+        "duplicated_files",
+        "new_duplicated_lines",
+        "new_duplicated_lines_density",
+        "new_duplicated_blocks",
+        // Issue metrics (for quality gates)
+        "bugs",
+        "vulnerabilities",
+        "code_smells",
+        "violations",
+        "new_bugs",
+        "new_vulnerabilities",
+        "new_code_smells",
+        "new_violations",
+        "blocker_violations",
+        "critical_violations",
+        "major_violations",
+        "minor_violations",
+        "info_violations",
+        "new_blocker_violations",
+        "new_critical_violations",
+        "new_major_violations",
+        // Security metrics
+        "security_hotspots",
+        "security_rating",
+        "security_review_rating",
+        "new_security_hotspots",
+        // Maintainability metrics
+        "sqale_rating",
+        "technical_debt",
+        "sqale_index",
+        "sqale_debt_ratio",
+        "new_technical_debt",
+        // Reliability metrics
+        "reliability_rating",
+        // Test metrics
+        "tests",
+        "test_success_density",
+        "test_errors",
+        "test_failures",
       ].join(","),
     });
 
@@ -566,6 +603,99 @@ export class SonarIssueExtractor {
     }
 
     const url = `${hotspotsUrl}?${params.toString()}`;
+
+    const authHeaders = config.publicSonar ? {} : this.getSonarAuthHeaders(this.sonarToken);
+    const response = await fetch(url, {
+      headers: {
+        ...authHeaders,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    return (await this.handleSonarResponse(response)) as Record<string, unknown>;
+  }
+
+  /**
+   * Builds the base URL for quality gates API endpoint
+   * @param baseUrl - SonarQube base URL
+   * @returns Normalized quality gates API URL
+   */
+  private buildQualityGatesUrl(baseUrl: string): string {
+    let url = baseUrl;
+    if (!url.includes("/api/qualitygates")) {
+      url = url.replace(/\/api\/.*$/, "").replace(/\/$/, "");
+      url = `${url}/api/qualitygates`;
+    }
+    return url;
+  }
+
+  /**
+   * Fetches quality gate status for a project, branch, or pull request
+   * @param config - Configuration object
+   * @param options - URL building options (branch or pullRequest)
+   * @returns Quality gate status data
+   */
+  async fetchQualityGateStatus(
+    config: Config,
+    options: { branch?: string; pullRequest?: string }
+  ): Promise<Record<string, unknown>> {
+    const baseUrl = SonarUrlBuilder.normalizeUrl(config.sonarBaseUrl || this.sonarBaseUrlRaw);
+    const qualityGatesUrl = this.buildQualityGatesUrl(baseUrl);
+
+    // Use the same component key logic as the issues API for consistency
+    const projectKey = this.getComponentKey(config);
+
+    const params = new URLSearchParams({
+      projectKey: projectKey,
+    });
+
+    if (options.pullRequest) {
+      params.set("pullRequest", options.pullRequest);
+    } else if (options.branch) {
+      params.set("branch", options.branch);
+    }
+
+    const url = `${qualityGatesUrl}/project_status?${params.toString()}`;
+
+    if (this.verbose) {
+      console.log(chalk.blue(`Quality Gate URL: ${url}`));
+    }
+
+    const authHeaders = config.publicSonar ? {} : this.getSonarAuthHeaders(this.sonarToken);
+    const response = await fetch(url, {
+      headers: {
+        ...authHeaders,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    return (await this.handleSonarResponse(response)) as Record<string, unknown>;
+  }
+
+  /**
+   * Fetches quality gate details/conditions by quality gate ID
+   * @param config - Configuration object
+   * @param qualityGateId - Quality gate ID
+   * @returns Quality gate details with conditions
+   */
+  async fetchQualityGateDetails(
+    config: Config,
+    qualityGateId: string
+  ): Promise<Record<string, unknown>> {
+    const baseUrl = SonarUrlBuilder.normalizeUrl(config.sonarBaseUrl || this.sonarBaseUrlRaw);
+    const qualityGatesUrl = this.buildQualityGatesUrl(baseUrl);
+
+    const params = new URLSearchParams({
+      id: qualityGateId,
+    });
+
+    const url = `${qualityGatesUrl}/show?${params.toString()}`;
+
+    if (this.verbose) {
+      console.log(chalk.blue(`Quality Gate Details URL: ${url}`));
+    }
 
     const authHeaders = config.publicSonar ? {} : this.getSonarAuthHeaders(this.sonarToken);
     const response = await fetch(url, {
