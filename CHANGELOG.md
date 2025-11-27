@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.5](https://github.com/davide97g/sonarflow/compare/v1.0.3...v1.0.5) (2025-11-27)
+
+
+### Bug Fixes
+
+* update build script to copy README.md to the current directory instead of dist/ ([a42d2d0](https://github.com/davide97g/sonarflow/commit/a42d2d02bd0fafaf26009ba2b0d12b21f9d90037))
+
+
+### Chores
+
+* **release:** 1.0.4-beta.0 ([f03a0b1](https://github.com/davide97g/sonarflow/commit/f03a0b172c2dc6e6e7857342c749cfa5a9731025))
+* **release:** update version to 1.0.4-beta.0 in package.json and schema ([3735610](https://github.com/davide97g/sonarflow/commit/37356108a41c3f9e905536bb51199cf5d7442c1e))
+
 ### [1.0.4-beta.0](https://github.com/davide97g/sonarflow/compare/v1.0.3...v1.0.4-beta.0) (2025-11-27)
 
 
