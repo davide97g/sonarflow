@@ -86,10 +86,74 @@ const detectPrId = async (
 };
 
 /**
- * Formats a table for issues by severity
+ * Maps SonarQube severity values to the new classification
  */
-const formatSeverityTable = (severityCounts: Record<string, number>): string => {
-  const sortedEntries = Object.entries(severityCounts).sort(([, a], [, b]) => b - a);
+const mapSeverity = (severity: string): string => {
+  const mapping: Record<string, string> = {
+    BLOCKER: "Blocker",
+    CRITICAL: "High",
+    MAJOR: "Medium",
+    MINOR: "Low",
+    INFO: "Info",
+  };
+  return mapping[severity.toUpperCase()] || severity;
+};
+
+/**
+ * Gets the color function for a severity level
+ */
+const getSeverityColor = (severity: string): typeof chalk => {
+  const mapped = mapSeverity(severity);
+  const mappedUpper = mapped.toUpperCase();
+  const severityUpper = severity.toUpperCase();
+
+  // Color mapping based on SonarQube UI
+  const colorMap: Record<string, typeof chalk> = {
+    BLOCKER: chalk.grey,
+    HIGH: chalk.red,
+    MEDIUM: chalk.hex("#FF8C00"), // Orange
+    LOW: chalk.hex("#8B4513"), // Brown
+    INFO: chalk.blue,
+    // Legacy mappings
+    CRITICAL: chalk.red,
+    MAJOR: chalk.hex("#FF8C00"), // Orange
+    MINOR: chalk.hex("#8B4513"), // Brown
+  };
+
+  return colorMap[mappedUpper] || colorMap[severityUpper] || chalk.white;
+};
+
+/**
+ * Gets the order/priority of a severity level (lower = higher priority)
+ */
+const getSeverityOrder = (severity: string): number => {
+  const mapped = mapSeverity(severity);
+  const order: Record<string, number> = {
+    Blocker: 1,
+    High: 2,
+    Medium: 3,
+    Low: 4,
+    Info: 5,
+  };
+  return order[mapped] || 99;
+};
+
+/**
+ * Formats a table for issues by severity with colors
+ */
+const formatSeverityTable = (severityCounts: Record<string, number>): void => {
+  // Map and aggregate severities
+  const mappedCounts: Record<string, number> = {};
+  for (const [severity, count] of Object.entries(severityCounts)) {
+    const mapped = mapSeverity(severity);
+    mappedCounts[mapped] = (mappedCounts[mapped] || 0) + count;
+  }
+
+  // Sort by order (Blocker, High, Medium, Low, Info)
+  const sortedEntries = Object.entries(mappedCounts).sort(
+    ([a], [b]) => getSeverityOrder(a) - getSeverityOrder(b)
+  );
+
   const maxSeverityLength = Math.max(
     ...sortedEntries.map(([severity]) => severity.length),
     "SEVERITY".length
@@ -103,22 +167,28 @@ const formatSeverityTable = (severityCounts: Record<string, number>): string => 
   const footer = `└${"─".repeat(maxSeverityLength + 2)}┴${"─".repeat(maxCountLength + 2)}┘`;
   const separator = `├${"─".repeat(maxSeverityLength + 2)}┼${"─".repeat(maxCountLength + 2)}┤`;
 
-  let table = header + "\n";
-  table += `│ ${"SEVERITY".padEnd(maxSeverityLength)} │ ${"COUNT".padStart(maxCountLength)} │\n`;
-  table += separator + "\n";
+  // Print header
+  console.log(header);
+  console.log(`│ ${"SEVERITY".padEnd(maxSeverityLength)} │ ${"COUNT".padStart(maxCountLength)} │`);
+  console.log(separator);
 
+  // Print data rows with colors
   for (const [severity, count] of sortedEntries) {
-    table += `│ ${severity.padEnd(maxSeverityLength)} │ ${count.toString().padStart(maxCountLength)} │\n`;
+    const colorFn = getSeverityColor(severity);
+    const line = `│ ${severity.padEnd(maxSeverityLength)} │ ${count.toString().padStart(maxCountLength)} │`;
+    console.log(colorFn(line));
   }
 
-  table += footer;
-  return table;
+  // Print footer
+  console.log(footer);
 };
 
 /**
  * Extracts coverage and duplication percentages from measures
  */
-const extractMetrics = (measures: Record<string, unknown>): {
+const extractMetrics = (
+  measures: Record<string, unknown>
+): {
   coverage: string | null;
   duplication: string | null;
 } => {
@@ -300,16 +370,28 @@ export const fetchSonarIssues = async (
         severityCounts[severity] = (severityCounts[severity] || 0) + 1;
       }
 
+      // Map and aggregate severities
+      const mappedCounts: Record<string, number> = {};
+      for (const [severity, count] of Object.entries(severityCounts)) {
+        const mapped = mapSeverity(severity);
+        mappedCounts[mapped] = (mappedCounts[mapped] || 0) + count;
+      }
+
+      // Sort by order (Blocker, High, Medium, Low, Info)
+      const sortedEntries = Object.entries(mappedCounts).sort(
+        ([a], [b]) => getSeverityOrder(a) - getSeverityOrder(b)
+      );
+
       if (verbose) {
         console.log(chalk.blue("\n📊 Issues by severity:"));
-        const sortedEntries = Object.entries(severityCounts).sort(([, a], [, b]) => b - a);
         for (const [severity, count] of sortedEntries) {
-          console.log(chalk.blue(`  ${severity}: ${count}`));
+          const colorFn = getSeverityColor(severity);
+          console.log(colorFn(`  ${severity}: ${count}`));
         }
       } else {
-        // Non-verbose: Show table format
+        // Non-verbose: Show table format with colors
         console.log(chalk.blue("\n📊 Issues by severity:"));
-        console.log(formatSeverityTable(severityCounts));
+        formatSeverityTable(severityCounts);
       }
     }
 
