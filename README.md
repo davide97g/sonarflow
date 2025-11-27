@@ -1,5 +1,7 @@
 # Sonarflow
 
+[![Production Release](https://github.com/davide97g/sonarflow/actions/workflows/release-production.yml/badge.svg)](https://github.com/davide97g/sonarflow/actions/workflows/release-production.yml)
+
 <p align="center">
   <img src="./public/logo.svg" alt="Sonarflow logo" width="128" />
 </p>
