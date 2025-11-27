@@ -3,9 +3,9 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { SonarIssueExtractor } from "../sonar/index.js";
 import chalk from "chalk";
 import dotenv from "dotenv";
+import { SonarIssueExtractor } from "../sonar/index.js";
 
 dotenv.config();
 

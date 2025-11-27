@@ -375,11 +375,7 @@ const runInit = async (): Promise<void> => {
         : flavor === "yolo"
           ? "rule-yolo.md"
           : "rule-vibe-coder.md";
-    const templateRulePath = path.join(
-      __dirname,
-      "../templates/",
-      templateFilename
-    );
+    const templateRulePath = path.join(__dirname, "../templates/", templateFilename);
     if (!(await fs.pathExists(templateRulePath))) {
       throw new Error(`Template rule not found at ${templateRulePath}`);
     }
