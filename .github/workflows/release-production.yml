@@ -60,6 +60,107 @@ jobs:
           # Get latest production tag (excluding beta tags)
           git fetch --tags
           LATEST_PROD_TAG=$(git tag -l "v*" | grep -v "beta" | sort -V | tail -1 || echo "")
+          
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Function to calculate next non-beta version
+          calculate_next_version() {
+            local base_version=$1
+            local bump_type=$2
+            
+            # Strip beta suffix if present
+            base_version=$(echo "$base_version" | sed 's/-beta.*//')
+            
+            # Parse version parts
+            IFS='.' read -r major minor patch <<< "$(echo "$base_version" | sed 's/v//')"
+            
+            case "$bump_type" in
+              "major")
+                major=$((major + 1))
+                minor=0
+                patch=0
+                ;;
+              "minor")
+                minor=$((minor + 1))
+                patch=0
+                ;;
+              "patch"|*)
+                patch=$((patch + 1))
+                ;;
+            esac
+            
+            echo "v${major}.${minor}.${patch}"
+          }
+          
+          # Function to create non-beta release
+          create_production_release() {
+            local release_type=$1
+            
+            # Check if current version is beta
+            if echo "$CURRENT_VERSION" | grep -q "beta"; then
+              echo "Current version is beta ($CURRENT_VERSION), calculating next non-beta version"
+              
+              # Determine version bump type
+              if [ "$release_type" = "auto" ]; then
+                # Check commit types to determine bump
+                if git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges | grep -qE "^BREAKING"; then
+                  NEXT_VERSION=$(calculate_next_version "$CURRENT_VERSION" "major")
+                elif git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges | grep -qE "^feat"; then
+                  NEXT_VERSION=$(calculate_next_version "$CURRENT_VERSION" "minor")
+                else
+                  NEXT_VERSION=$(calculate_next_version "$CURRENT_VERSION" "patch")
+                fi
+              else
+                NEXT_VERSION=$(calculate_next_version "$CURRENT_VERSION" "$release_type")
+              fi
+              
+              # Extract version number without 'v' prefix
+              NEXT_VERSION_NUM=$(echo "$NEXT_VERSION" | sed 's/v//')
+              echo "Creating production release: $NEXT_VERSION"
+              
+              # Create temporary .versionrc.json without prerelease setting for production
+              node -e "
+                const fs = require('fs');
+                const config = JSON.parse(fs.readFileSync('.versionrc.json', 'utf8'));
+                delete config.prerelease;
+                fs.writeFileSync('.versionrc.json.tmp', JSON.stringify(config, null, 2));
+              "
+              
+              # Backup original and use temp config
+              cp .versionrc.json .versionrc.json.backup
+              cp .versionrc.json.tmp .versionrc.json
+              
+              # Use --release-as with exact version to force non-beta release
+              bunx standard-version --release-as "$NEXT_VERSION_NUM" || {
+                # Restore original config on error
+                mv .versionrc.json.backup .versionrc.json
+                rm -f .versionrc.json.tmp
+                exit 1
+              }
+              
+              # Restore original config
+              mv .versionrc.json.backup .versionrc.json
+              rm -f .versionrc.json.tmp
+            else
+              # Current version is not beta, use standard release
+              case "$release_type" in
+                "auto")
+                  bun run release
+                  ;;
+                "patch")
+                  bun run release:patch
+                  ;;
+                "minor")
+                  bun run release:minor
+                  ;;
+                "major")
+                  bun run release:major
+                  ;;
+              esac
+            fi
+          }
 
           if [ -z "$LATEST_PROD_TAG" ]; then
             echo "No previous production tag found, creating first release"
@@ -70,17 +171,17 @@ jobs:
             
             if [ -z "$COMMITS_SINCE_TAG" ]; then
               echo "No new commits since last production tag, forcing patch release"
-              bun run release:patch
+              create_production_release "patch"
             else
               # Check if there are any version-bump commits (feat, fix, perf, refactor, BREAKING)
               VERSION_BUMP_COMMITS=$(git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges | grep -E "^(feat|fix|perf|refactor|BREAKING)" || true)
               
               if [ -z "$VERSION_BUMP_COMMITS" ]; then
                 echo "No version-bump commits found, forcing patch release"
-                bun run release:patch
+                create_production_release "patch"
               else
-                # Create production release (no prerelease flag, auto-determines version bump)
-                bun run release
+                # Create production release (auto-determines version bump)
+                create_production_release "auto"
               fi
             fi
           fi
