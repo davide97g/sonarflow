@@ -8,7 +8,7 @@
     "sonarflow": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsgo && cp ../../README.md dist/",
+    "build": "tsgo && cp ../../README.md .",
     "dev": "tsgo --watch",
     "lint": "biome lint src",
     "lint:fix": "biome lint --write src",
