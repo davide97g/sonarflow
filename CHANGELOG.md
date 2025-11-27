@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/davide97g/sonarflow/compare/v1.1.1...v1.2.0) (2025-11-27)
+
+
+### Features
+
+* **cli:** add verbose logging option to fetch command and enhance logging in Sonar issue extraction ([2ec85b0](https://github.com/davide97g/sonarflow/commit/2ec85b0e33323474912ec029335627d9a5f09a1e))
+* **cli:** add version command to CLI and suppress dotenv logs during initialization ([2878342](https://github.com/davide97g/sonarflow/commit/28783427b494f65ae1561d954eabdac4845c1701))
+* **cli:** enhance severity handling in Sonar issue reporting with mapping, color coding, and improved table formatting ([08cfd64](https://github.com/davide97g/sonarflow/commit/08cfd64e57f230d6a47e1a8f88c498f2732b07f5))
+
+
+### Code Refactoring
+
+* **cli:** update logging colors to use whiteBright for improved visibility in Sonar issue reporting ([83e4f4c](https://github.com/davide97g/sonarflow/commit/83e4f4c7ebb99484829f3d9f2804baecb1dd93c0))
+
 ### [1.1.1](https://github.com/davide97g/sonarflow/compare/v1.1.0...v1.1.1) (2025-11-27)
 
 
