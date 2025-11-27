@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8](https://github.com/davide97g/sonarflow/compare/v1.0.7...v1.0.8) (2025-11-27)
+
+
+### Chores
+
+* update package references from davide97g/sonarflow to sonarflow in documentation ([0b6408d](https://github.com/davide97g/sonarflow/commit/0b6408dc48e257dcfa887e967db799c0287e6526))
+
 ### [1.0.7](https://github.com/davide97g/sonarflow/compare/v1.0.5...v1.0.7) (2025-11-27)
 
 
