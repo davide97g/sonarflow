@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://sonarflow.vercel.app/">🌐 Website</a>
+  <a href="https://sonarflow.dev/">🌐 Website</a>
 </p>
 
 CLI utility for fetching SonarQube issues. Automatically detects PR IDs from branches and fetches SonarQube issues for code quality analysis. Includes AI editor integration for automated issue fixing. Supports GitHub and Bitbucket.
