@@ -64,15 +64,17 @@ const loadConfiguration = (): Config => {
  * Detects PR ID based on the configured git provider
  * @param branch - Current git branch name
  * @param gitProvider - Git provider (github or bitbucket)
+ * @param verbose - Enable verbose logging
  * @returns PR ID if found, null otherwise
  */
 const detectPrId = async (
   repoName: string,
   branch: string,
   organization: string,
-  gitProvider: "github" | "bitbucket"
+  gitProvider: "github" | "bitbucket",
+  verbose: boolean = false
 ): Promise<string | null> => {
-  const extractor = new SonarIssueExtractor();
+  const extractor = new SonarIssueExtractor(verbose);
   if (gitProvider === "github") {
     return await extractor.detectGitHubPrId(branch);
   }
@@ -84,26 +86,88 @@ const detectPrId = async (
 };
 
 /**
- * Fetches SonarQube issues based on configuration and command line arguments
- * @param branchName - Optional branch name
- * @param sonarPrLink - Optional SonarQube PR link
+ * Formats a table for issues by severity
  */
+const formatSeverityTable = (severityCounts: Record<string, number>): string => {
+  const sortedEntries = Object.entries(severityCounts).sort(([, a], [, b]) => b - a);
+  const maxSeverityLength = Math.max(
+    ...sortedEntries.map(([severity]) => severity.length),
+    "SEVERITY".length
+  );
+  const maxCountLength = Math.max(
+    ...sortedEntries.map(([, count]) => count.toString().length),
+    "COUNT".length
+  );
+
+  const header = `┌${"─".repeat(maxSeverityLength + 2)}┬${"─".repeat(maxCountLength + 2)}┐`;
+  const footer = `└${"─".repeat(maxSeverityLength + 2)}┴${"─".repeat(maxCountLength + 2)}┘`;
+  const separator = `├${"─".repeat(maxSeverityLength + 2)}┼${"─".repeat(maxCountLength + 2)}┤`;
+
+  let table = header + "\n";
+  table += `│ ${"SEVERITY".padEnd(maxSeverityLength)} │ ${"COUNT".padStart(maxCountLength)} │\n`;
+  table += separator + "\n";
+
+  for (const [severity, count] of sortedEntries) {
+    table += `│ ${severity.padEnd(maxSeverityLength)} │ ${count.toString().padStart(maxCountLength)} │\n`;
+  }
+
+  table += footer;
+  return table;
+};
+
+/**
+ * Extracts coverage and duplication percentages from measures
+ */
+const extractMetrics = (measures: Record<string, unknown>): {
+  coverage: string | null;
+  duplication: string | null;
+} => {
+  let coverage: string | null = null;
+  let duplication: string | null = null;
+
+  // Measures structure: { component: { measures: [{ metric: "coverage", value: "85.5" }, ...] } }
+  const component = measures.component as
+    | { measures?: Array<{ metric?: string; value?: string }> }
+    | undefined;
+
+  if (component?.measures) {
+    for (const measure of component.measures) {
+      if (measure.metric === "coverage" || measure.metric === "new_coverage") {
+        coverage = measure.value || null;
+      }
+      if (
+        measure.metric === "duplicated_lines_density" ||
+        measure.metric === "new_duplicated_lines_density"
+      ) {
+        duplication = measure.value || null;
+      }
+    }
+  }
+
+  return { coverage, duplication };
+};
+
 export const fetchSonarIssues = async (
   branchName: string | null = null,
-  sonarPrLink: string | null = null
+  sonarPrLink: string | null = null,
+  verbose: boolean = false
 ): Promise<void> => {
   try {
     // Load configuration
     const config = loadConfiguration();
-    console.log(chalk.blue(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
+    if (verbose) {
+      console.log(chalk.blue(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
+    }
 
     // Get current git branch
     const currentBranch =
       branchName || execSync("git branch --show-current", { encoding: "utf8" }).trim();
-    console.log(chalk.blue(`Current branch: ${currentBranch}`));
+    if (verbose) {
+      console.log(chalk.blue(`Current branch: ${currentBranch}`));
+    }
 
     // Initialize SonarQube extractor
-    const extractor = new SonarIssueExtractor();
+    const extractor = new SonarIssueExtractor(verbose);
 
     let issues: SonarIssuesResponse;
     let usedSource: string;
@@ -111,7 +175,9 @@ export const fetchSonarIssues = async (
 
     if (sonarPrLink) {
       // If PR link is provided, fetch issues from that PR
-      console.log(chalk.blue(`Using provided SonarQube PR link: ${sonarPrLink}`));
+      if (verbose) {
+        console.log(chalk.blue(`Using provided SonarQube PR link: ${sonarPrLink}`));
+      }
       // Extract PR key from link
       const prKeyMatch = sonarPrLink.match(/pullRequest=([^&]+)/);
       const prKey = prKeyMatch ? prKeyMatch[1] : null;
@@ -129,27 +195,34 @@ export const fetchSonarIssues = async (
         config.repoName,
         currentBranch,
         config.gitOrganization,
-        config.gitProvider
+        config.gitProvider,
+        verbose
       );
 
       if (detectedPrId) {
         // Use detected PR ID
-        console.log(chalk.green(`🚀 Using automatically detected PR ID: ${detectedPrId}`));
+        if (verbose) {
+          console.log(chalk.green(`🚀 Using automatically detected PR ID: ${detectedPrId}`));
+        }
         issues = await extractor.fetchIssuesForPrId(detectedPrId, config);
         fetchOptions = { pullRequest: detectedPrId };
         usedSource = `PR #${detectedPrId} (auto-detected from branch: ${currentBranch})`;
       } else {
         // Fallback to branch-based approach
-        console.warn(chalk.yellow("📋 No PR detected, falling back to branch-based approach"));
+        if (verbose) {
+          console.warn(chalk.yellow("📋 No PR detected, falling back to branch-based approach"));
+        }
         issues = await extractor.fetchIssuesForBranch(currentBranch, config);
         fetchOptions = { branch: currentBranch };
         usedSource = currentBranch;
 
         // Fallback to develop if no issues found
         if (!issues.issues || issues.issues.length === 0) {
-          console.warn(
-            chalk.yellow("No issues found for current branch. Falling back to branch: develop")
-          );
+          if (verbose) {
+            console.warn(
+              chalk.yellow("No issues found for current branch. Falling back to branch: develop")
+            );
+          }
           issues = await extractor.fetchIssuesForBranch("develop", config);
           fetchOptions = { branch: "develop" };
           usedSource = "develop";
@@ -158,16 +231,22 @@ export const fetchSonarIssues = async (
     }
 
     // Extract duplications, coverage, and security issues
-    console.log(chalk.blue("📊 Fetching duplications, coverage, and security hotspots..."));
+    if (verbose) {
+      console.log(chalk.blue("📊 Fetching duplications, coverage, and security hotspots..."));
+    }
     const [measures, securityHotspots] = await Promise.all([
       extractor.fetchMeasures(config, fetchOptions).catch((error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        console.warn(chalk.yellow(`⚠️  Failed to fetch measures: ${errorMessage}`));
+        if (verbose) {
+          console.warn(chalk.yellow(`⚠️  Failed to fetch measures: ${errorMessage}`));
+        }
         return {};
       }),
       extractor.fetchSecurityHotspots(config, fetchOptions).catch((error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots: ${errorMessage}`));
+        if (verbose) {
+          console.warn(chalk.yellow(`⚠️  Failed to fetch security hotspots: ${errorMessage}`));
+        }
         return {};
       }),
     ]);
@@ -186,24 +265,32 @@ export const fetchSonarIssues = async (
     if (measures && Object.keys(measures).length > 0) {
       const measuresPath = path.join(sonarDir, "measures.json");
       fs.writeFileSync(measuresPath, JSON.stringify(measures, null, 2));
-      console.log(chalk.blue(`📁 Saved measures to: ${measuresPath}`));
+      if (verbose) {
+        console.log(chalk.blue(`📁 Saved measures to: ${measuresPath}`));
+      }
     }
 
     // Save security hotspots if available
     if (securityHotspots && Object.keys(securityHotspots).length > 0) {
       const hotspotsPath = path.join(sonarDir, "security-hotspots.json");
       fs.writeFileSync(hotspotsPath, JSON.stringify(securityHotspots, null, 2));
-      const hotspotsCount =
-        (securityHotspots as { hotspots?: Array<unknown> }).hotspots?.length || 0;
-      console.log(chalk.blue(`📁 Saved ${hotspotsCount} security hotspot(s) to: ${hotspotsPath}`));
+      if (verbose) {
+        const hotspotsCount =
+          (securityHotspots as { hotspots?: Array<unknown> }).hotspots?.length || 0;
+        console.log(
+          chalk.blue(`📁 Saved ${hotspotsCount} security hotspot(s) to: ${hotspotsPath}`)
+        );
+      }
     }
 
-    console.log(
-      chalk.green(
-        `✅ Successfully fetched ${issues.issues?.length || 0} issues (source: ${usedSource})`
-      )
-    );
-    console.log(chalk.blue(`📁 Saved to: ${issuesPath}`));
+    if (verbose) {
+      console.log(
+        chalk.green(
+          `✅ Successfully fetched ${issues.issues?.length || 0} issues (source: ${usedSource})`
+        )
+      );
+      console.log(chalk.blue(`📁 Saved to: ${issuesPath}`));
+    }
 
     // Display summary
     if (issues.issues && issues.issues.length > 0) {
@@ -213,10 +300,34 @@ export const fetchSonarIssues = async (
         severityCounts[severity] = (severityCounts[severity] || 0) + 1;
       }
 
-      console.log(chalk.blue("\n📊 Issues by severity:"));
-      const sortedEntries = Object.entries(severityCounts).sort(([, a], [, b]) => b - a);
-      for (const [severity, count] of sortedEntries) {
-        console.log(chalk.blue(`  ${severity}: ${count}`));
+      if (verbose) {
+        console.log(chalk.blue("\n📊 Issues by severity:"));
+        const sortedEntries = Object.entries(severityCounts).sort(([, a], [, b]) => b - a);
+        for (const [severity, count] of sortedEntries) {
+          console.log(chalk.blue(`  ${severity}: ${count}`));
+        }
+      } else {
+        // Non-verbose: Show table format
+        console.log(chalk.blue("\n📊 Issues by severity:"));
+        console.log(formatSeverityTable(severityCounts));
+      }
+    }
+
+    // Extract and display metrics (coverage, duplication, security hotspots)
+    const metrics = extractMetrics(measures);
+    const hotspotsCount =
+      (securityHotspots as { hotspots?: Array<unknown> })?.hotspots?.length || 0;
+
+    if (!verbose) {
+      console.log();
+      if (metrics.coverage !== null) {
+        console.log(chalk.blue(`Coverage: ${metrics.coverage}%`));
+      }
+      if (metrics.duplication !== null) {
+        console.log(chalk.blue(`Duplicated lines: ${metrics.duplication}%`));
+      }
+      if (hotspotsCount > 0) {
+        console.log(chalk.blue(`Security hotspots: ${hotspotsCount}`));
       }
     }
   } catch (error) {

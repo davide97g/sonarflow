@@ -131,13 +131,17 @@ program
 program
   .command("fetch")
   .description("Fetch Sonar issues and save to .sonarflow/issues.json")
+  .option("-v, --verbose", "Enable verbose logging")
   .allowExcessArguments(true)
-  .action(async () => {
+  .action(async (options) => {
     const args = process.argv.slice(3);
     const branchName = args[0] || null;
     const sonarPrLink = args[1] || null;
-    await fetchSonarIssues(branchName, sonarPrLink);
-    showUpdateReminder();
+    const verbose = options.verbose || false;
+    await fetchSonarIssues(branchName, sonarPrLink, verbose);
+    if (verbose) {
+      showUpdateReminder();
+    }
   });
 
 program
