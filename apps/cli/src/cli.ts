@@ -17,8 +17,10 @@ const __dirname = path.dirname(__filename);
 
 const program = new Command();
 
-// Get current version from root package.json
-const packageJsonPath = path.join(__dirname, "../../../package.json");
+// Get current version from package.json
+// Works both in development (apps/cli/dist -> apps/cli/package.json)
+// and when installed globally (node_modules/sonarflow/dist -> node_modules/sonarflow/package.json)
+const packageJsonPath = path.join(__dirname, "../package.json");
 const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 const currentVersion = packageJson.version;
 
