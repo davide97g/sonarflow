@@ -69,25 +69,37 @@ jobs:
             COMMITS_SINCE_TAG=$(git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges)
             
             if [ -z "$COMMITS_SINCE_TAG" ]; then
-              echo "No new commits since last production tag, skipping release"
-              exit 0
+              echo "No new commits since last production tag, forcing patch release"
+              bun run release:patch
+            else
+              # Check if there are any version-bump commits (feat, fix, perf, refactor, BREAKING)
+              VERSION_BUMP_COMMITS=$(git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges | grep -E "^(feat|fix|perf|refactor|BREAKING)" || true)
+              
+              if [ -z "$VERSION_BUMP_COMMITS" ]; then
+                echo "No version-bump commits found, forcing patch release"
+                bun run release:patch
+              else
+                # Create production release (no prerelease flag, auto-determines version bump)
+                bun run release
+              fi
             fi
-            
-            # Check if there are any version-bump commits (feat, fix, perf, refactor, BREAKING)
-            VERSION_BUMP_COMMITS=$(git log ${LATEST_PROD_TAG}..HEAD --pretty=format:"%s" --no-merges | grep -E "^(feat|fix|perf|refactor|BREAKING)" || true)
-            
-            if [ -z "$VERSION_BUMP_COMMITS" ]; then
-              echo "No version-bump commits found, skipping release"
-              exit 0
-            fi
-            
-            # Create production release (no prerelease flag, auto-determines version bump)
-            bun run release
           fi
 
+          # Verify a tag was created
           NEW_TAG=$(git describe --tags --abbrev=0)
+          if [ -z "$NEW_TAG" ]; then
+            echo "Error: No tag was created by the release process"
+            exit 1
+          fi
+          
+          # Verify the tag is not a beta tag
+          if echo "$NEW_TAG" | grep -q "beta"; then
+            echo "Error: Created tag $NEW_TAG is a beta tag, but this is a production release"
+            exit 1
+          fi
+          
           echo "tag=$NEW_TAG" >> $GITHUB_OUTPUT
-        continue-on-error: true
+          echo "Successfully created production release: $NEW_TAG"
 
       - name: Push changes and tags
         if: steps.release.outputs.tag != ''
