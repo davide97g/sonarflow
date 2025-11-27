@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.9](https://github.com/davide97g/sonarflow/compare/v1.0.8...v1.0.9) (2025-11-27)
+
+
+### Chores
+
+* reorganize imports in cli.ts and versioning/index.ts; streamline templateRulePath assignment in init.ts ([48d0536](https://github.com/davide97g/sonarflow/commit/48d05360a145d01382a08b040436551b71cb8839))
+* update version to 1.0.6-beta.0 in bun.lock and package.json; remove workspace dependencies and adjust import paths ([85bf0bb](https://github.com/davide97g/sonarflow/commit/85bf0bb204493f3ace72759c77b370498ddb44ee))
+
 ### [1.0.8](https://github.com/davide97g/sonarflow/compare/v1.0.7...v1.0.8) (2025-11-27)
 
 

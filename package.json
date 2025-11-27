@@ -1,6 +1,6 @@
 {
   "name": "sonarflow",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "CLI utility for fetching SonarQube issues and integrating with Bitbucket/GitHub PR workflows",
   "private": false,
   "workspaces": [
