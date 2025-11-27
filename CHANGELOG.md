@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/davide97g/sonarflow/compare/v1.3.1...v1.3.2) (2025-11-27)
+
+
+### Chores
+
+* **deps:** update @biomejs/biome to version 2.3.8 and adjust schema version in biome.json; enhance metadata in index.html ([800cfca](https://github.com/davide97g/sonarflow/commit/800cfcae2369238584bf1da0520d2d11e483287f))
+
 ### [1.3.1](https://github.com/davide97g/sonarflow/compare/v1.3.0...v1.3.1) (2025-11-27)
 
 
