@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/davide97g/sonarflow/compare/v1.0.1-beta.2...v1.0.1) (2025-11-27)
+
+
+### Bug Fixes
+
+* correct CLI binary path and enhance build script to include README.md ([49d67ad](https://github.com/davide97g/sonarflow/commit/49d67ad84a19f3aeb698d7ea0432ecf9e401b97c))
+
 ### [1.0.1-beta.2](https://github.com/davide97g/sonarflow/compare/v1.0.1-beta.1...v1.0.1-beta.2) (2025-11-27)
 
 
