@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1-beta.1](https://github.com/davide97g/sonarflow/compare/v1.0.1-beta.0...v1.0.1-beta.1) (2025-11-27)
+
+
+### Chores
+
+* update schema and CLI package versions during release process ([4f38503](https://github.com/davide97g/sonarflow/commit/4f38503db8609b5e1d6910801fbd6074d91a7b6c))
+
 ### [1.0.1-beta.0](https://github.com/davide97g/sonarflow/compare/v1.0.0...v1.0.1-beta.0) (2025-11-27)
 
 
