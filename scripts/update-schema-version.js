@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Updates the schema file's $id field with the current package version.
- * This script is called during the release process via standard-version hooks.
- * Automatically commits the schema version change with a default message.
+ * Updates the schema file's $id field and CLI package.json version with the current package version.
+ * This script is called during the release process via standard-version hooks (postbump).
+ * Stages the updated files so standard-version includes them in its release commit.
  */
 
 import { execSync } from "node:child_process";
@@ -26,7 +26,7 @@ try {
     process.exit(1);
   }
 
-  // Read schema file
+  // Read and update schema file
   const schemaPath = join(rootDir, "schemas", "sonarflowrc.schema.json");
   const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
 
@@ -39,43 +39,33 @@ try {
 
   console.log(`✅ Updated schema $id: ${oldId} → ${schema.$id}`);
 
-  // Stage and commit the schema file
+  // Read and update CLI package.json version
+  const cliPackageJsonPath = join(rootDir, "apps", "cli", "package.json");
+  const cliPackageJson = JSON.parse(readFileSync(cliPackageJsonPath, "utf8"));
+  const oldCliVersion = cliPackageJson.version;
+  cliPackageJson.version = version;
+
+  // Write updated CLI package.json
+  writeFileSync(cliPackageJsonPath, JSON.stringify(cliPackageJson, null, 2) + "\n", "utf8");
+
+  console.log(`✅ Updated CLI package.json version: ${oldCliVersion} → ${version}`);
+
+  // Stage the schema file and CLI package.json
+  // Standard-version will commit these along with the root package.json and CHANGELOG
   try {
     const schemaRelativePath = "schemas/sonarflowrc.schema.json";
-    const commitMessage = `chore: update schema version to v${version}`;
+    const cliPackageRelativePath = "apps/cli/package.json";
 
-    // Stage the schema file
+    // Stage both files so standard-version includes them in its commit
     try {
-      execSync(`git add ${schemaRelativePath}`, {
+      execSync(`git add ${schemaRelativePath} ${cliPackageRelativePath}`, {
         cwd: rootDir,
         stdio: "pipe",
       });
+      console.log(`✅ Staged schema and CLI package.json for commit`);
     } catch (addError) {
-      console.error("⚠️  Warning: Failed to stage schema file");
-      throw addError;
-    }
-
-    // Commit with the default message
-    try {
-      execSync(`git commit -m "${commitMessage}"`, {
-        cwd: rootDir,
-        stdio: "pipe",
-      });
-      console.log(`✅ Committed schema version update: ${commitMessage}`);
-    } catch (commitError) {
-      // execSync throws an Error with the command output in the message
-      const errorOutput = commitError instanceof Error ? commitError.message : String(commitError);
-
-      // Check if git commit failed because there are no changes
-      if (
-        errorOutput.includes("nothing to commit") ||
-        errorOutput.includes("no changes added to commit")
-      ) {
-        console.log("ℹ️  Schema version unchanged, skipping commit");
-      } else {
-        console.error("⚠️  Warning: Failed to commit schema version update:", errorOutput);
-        // Don't fail the entire process if commit fails
-      }
+      console.error("⚠️  Warning: Failed to stage files:", addError instanceof Error ? addError.message : String(addError));
+      // Don't fail the entire process if staging fails
     }
   } catch (gitError) {
     // For any other git errors, log but don't fail
@@ -86,7 +76,7 @@ try {
   }
 } catch (error) {
   console.error(
-    "❌ Error updating schema version:",
+    "❌ Error updating schema and CLI package versions:",
     error instanceof Error ? error.message : String(error)
   );
   process.exit(1);
