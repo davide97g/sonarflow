@@ -627,7 +627,7 @@ export const fetchSonarIssues = async (
     }
 
     // Check if Sonar is private and exit gracefully if token is missing
-    const isPrivateSonar = config.sonarMode === "custom" || !config.publicSonar;
+    const isPrivateSonar = !config.publicSonar;
     if (isPrivateSonar && !process.env.SONAR_TOKEN) {
       console.warn(
         chalk.yellow(

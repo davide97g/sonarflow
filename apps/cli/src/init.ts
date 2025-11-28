@@ -35,6 +35,7 @@ interface InitAnswers {
   sonarProjectKey: string;
   sonarMode: "standard" | "custom";
   sonarBaseUrl?: string;
+  publicSonar: boolean;
 
   aiEditor: "cursor" | "copilot (vscode)" | "windsurf" | "other";
   rulesFlavor: "safe" | "vibe-coder" | "yolo";
@@ -158,6 +159,8 @@ const runInit = async (): Promise<void> => {
     existingConfig.sonarOrganization ??
     (defaultRepoName.includes("@") ? defaultRepoName.split("/")[0] : undefined);
 
+  const defaultPublicSonar = existingConfig.publicSonar ?? false;
+
   const getDefaultRulePath = (
     editor: "cursor" | "copilot (vscode)" | "windsurf" | "other"
   ): string => {
@@ -175,6 +178,8 @@ const runInit = async (): Promise<void> => {
 
   let answers: InitAnswers;
   try {
+    // Repository section
+    console.log(chalk.cyan("\n📦 Repository\n"));
     const repoName = await input({
       message: "Repository name?",
       default: defaultRepoName,
@@ -211,17 +216,8 @@ const runInit = async (): Promise<void> => {
     });
     gitOrganization = gitOrganization.trim();
 
-    const aiEditor = await select<"cursor" | "copilot (vscode)" | "windsurf" | "other">({
-      message: "AI editor:",
-      choices: [
-        { name: "cursor", value: "cursor" },
-        { name: "copilot (vscode)", value: "copilot (vscode)" },
-        { name: "windsurf", value: "windsurf" },
-        { name: "other", value: "other" },
-      ],
-      default: defaultAiEditor,
-    });
-
+    // Sonar section
+    console.log(chalk.cyan("\n🔍 Sonar\n"));
     const sonarMode = await select<"standard" | "custom">({
       message: "Sonar mode:",
       choices: [
@@ -273,6 +269,28 @@ const runInit = async (): Promise<void> => {
       sonarBaseUrl = sonarBaseUrl.trim();
     }
 
+    const publicSonar = await select<boolean>({
+      message: "Sonar visibility:",
+      choices: [
+        { name: "public", value: true },
+        { name: "private", value: false },
+      ],
+      default: defaultPublicSonar,
+    });
+
+    // AI section
+    console.log(chalk.cyan("\n🤖 AI\n"));
+    const aiEditor = await select<"cursor" | "copilot (vscode)" | "windsurf" | "other">({
+      message: "AI editor:",
+      choices: [
+        { name: "cursor", value: "cursor" },
+        { name: "copilot (vscode)", value: "copilot (vscode)" },
+        { name: "windsurf", value: "windsurf" },
+        { name: "other", value: "other" },
+      ],
+      default: defaultAiEditor,
+    });
+
     const rulesFlavor = await select<"safe" | "vibe-coder" | "yolo">({
       message: "Rules flavor:",
       choices: [
@@ -298,11 +316,12 @@ const runInit = async (): Promise<void> => {
       gitProvider,
       repositoryVisibility,
       gitOrganization,
-      aiEditor,
       sonarOrganization,
       sonarProjectKey,
       sonarMode,
       sonarBaseUrl,
+      publicSonar,
+      aiEditor,
       rulesFlavor,
       rulePath: rulePath.trim(),
     };
@@ -342,7 +361,7 @@ const runInit = async (): Promise<void> => {
     sonarProjectKey: answers.sonarProjectKey,
     sonarMode: answers.sonarMode,
     sonarBaseUrl: answers.sonarBaseUrl,
-    publicSonar: false,
+    publicSonar: answers.publicSonar,
 
     // automation
     aiEditor: answers.aiEditor,
