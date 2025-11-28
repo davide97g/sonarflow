@@ -120,27 +120,6 @@
         "vite": "^5.4.19",
       },
     },
-    "packages/@sonarflow/shared": {
-      "name": "@sonarflow/shared",
-      "version": "1.0.0-beta.4",
-    },
-    "packages/@sonarflow/sonar": {
-      "name": "@sonarflow/sonar",
-      "version": "1.0.0-beta.4",
-      "dependencies": {
-        "chalk": "^5.6.2",
-        "dotenv": "^17.2.3",
-      },
-    },
-    "packages/@sonarflow/versioning": {
-      "name": "@sonarflow/versioning",
-      "version": "1.0.0-beta.4",
-      "dependencies": {
-        "@sonarflow/sonar": "workspace:*",
-        "chalk": "^5.6.2",
-        "dotenv": "^17.2.3",
-      },
-    },
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
@@ -456,12 +435,6 @@
     "@rollup/rollup-win32-x64-gnu": ["@rollup/rollup-win32-x64-gnu@4.53.3", "", { "os": "win32", "cpu": "x64" }, "sha512-J9QDiOIZlZLdcot5NXEepDkstocktoVjkaKUtqzgzpt2yWjGlbYiKyp05rWwk4nypbYUNoFAztEgixoLaSETkg=="],
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.53.3", "", { "os": "win32", "cpu": "x64" }, "sha512-UhTd8u31dXadv0MopwGgNOBpUVROFKWVQgAg5N1ESyCz8AuBcMqm4AuTjrwgQKGDfoFuz02EuMRHQIw/frmYKQ=="],
-
-    "@sonarflow/shared": ["@sonarflow/shared@workspace:packages/@sonarflow/shared"],
-
-    "@sonarflow/sonar": ["@sonarflow/sonar@workspace:packages/@sonarflow/sonar"],
-
-    "@sonarflow/versioning": ["@sonarflow/versioning@workspace:packages/@sonarflow/versioning"],
 
     "@sonarflow/web": ["@sonarflow/web@workspace:apps/web"],
 

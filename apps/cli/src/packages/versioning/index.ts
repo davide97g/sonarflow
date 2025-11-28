@@ -275,7 +275,7 @@ const formatQualityGateStatus = (
             .split("_")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join(" ");
-          return (emoji + " " + displayName).length;
+          return `${emoji} ${displayName}`.length;
         }),
         "METRIC".length
       ) + 3; // Add extra padding for better alignment
@@ -337,9 +337,7 @@ const formatQualityGateStatus = (
 
       // Build the line with metric color for metric name, status color for status
       const metricPart = metricColor(displayMetric.padEnd(maxMetricLength));
-      const statusPart = statusColor(
-        (conditionIcon + " " + conditionStatus).padEnd(maxStatusLength)
-      );
+      const statusPart = statusColor(`${conditionIcon} ${conditionStatus}`.padEnd(maxStatusLength));
       const line = `  │ ${metricPart} │ ${statusPart} │ ${actualValue.padStart(maxActualLength)} │ ${thresholdDisplay.padStart(maxThresholdLength)} │`;
       console.log(line);
     }
