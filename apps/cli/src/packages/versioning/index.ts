@@ -626,6 +626,19 @@ export const fetchSonarIssues = async (
       console.log(chalk.whiteBright(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
     }
 
+    // Check if Sonar is private and exit gracefully if token is missing
+    const isPrivateSonar = config.sonarMode === "custom" || !config.publicSonar;
+    if (isPrivateSonar && !process.env.SONAR_TOKEN) {
+      console.warn(
+        chalk.yellow(
+          "⚠️  Warning: SONAR_TOKEN environment variable is required for private Sonar instances."
+        )
+      );
+      console.warn(chalk.gray(`   Create a token at: https://sonarcloud.io/account/security`));
+      console.log(); // Add spacing before exit
+      return;
+    }
+
     // Get current git branch
     const currentBranch =
       branchName || execSync("git branch --show-current", { encoding: "utf8" }).trim();
@@ -683,16 +696,16 @@ export const fetchSonarIssues = async (
         fetchOptions = { branch: currentBranch };
         usedSource = currentBranch;
 
-        // Fallback to develop if no issues found
+        // Fallback to main if no issues found
         if (!issues.issues || issues.issues.length === 0) {
           if (verbose) {
             console.warn(
-              chalk.yellow("No issues found for current branch. Falling back to branch: develop")
+              chalk.yellow("No issues found for current branch. Falling back to branch: main")
             );
           }
-          issues = await extractor.fetchIssuesForBranch("develop", config);
-          fetchOptions = { branch: "develop" };
-          usedSource = "develop";
+          issues = await extractor.fetchIssuesForBranch("main", config);
+          fetchOptions = { branch: "main" };
+          usedSource = "main";
         }
       }
     }

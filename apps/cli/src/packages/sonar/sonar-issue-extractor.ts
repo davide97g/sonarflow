@@ -98,8 +98,7 @@ export class SonarIssueExtractor {
     if (!token) return {};
 
     // SonarCloud/SonarQube typically uses Basic Auth: token as username, empty password
-    const tokenString = `${token}:`;
-    const basicAuth = `Basic ${Buffer.from(tokenString).toString("base64")}`;
+    const basicAuth = `Bearer ${token}`;
 
     return {
       Authorization: basicAuth,

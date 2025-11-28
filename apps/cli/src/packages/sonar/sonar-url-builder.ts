@@ -3,9 +3,9 @@
  */
 interface UrlBuilderConfig {
   publicSonar?: boolean;
-  sonarComponentKeys?: string;
   sonarOrganization?: string;
   sonarProjectKey?: string;
+  sonarMode?: "standard" | "custom";
   gitOrganization?: string;
   repoName: string;
   timeZone?: string;
@@ -24,7 +24,6 @@ interface UrlBuildOptions {
  */
 interface SonarSetupConfig {
   isSonarCloud: boolean;
-  componentKeys?: string;
   organization?: string;
   component?: string;
   timeZone?: string;
@@ -46,17 +45,17 @@ export class SonarUrlBuilder {
   constructor(baseUrl: string, config: UrlBuilderConfig) {
     this.baseUrl = baseUrl;
 
+    // Detect SonarCloud: standard mode OR publicSonar with organization OR baseUrl is sonarcloud.io
     const isSonarCloud =
-      Boolean(config.publicSonar) &&
-      Boolean(config.sonarComponentKeys) &&
-      Boolean(config.sonarOrganization);
+      config.sonarMode === "standard" ||
+      (Boolean(config.publicSonar) && Boolean(config.sonarOrganization)) ||
+      baseUrl.includes("sonarcloud.io");
 
     // Determine component value - prefer project key, fallback to repo name
     const component = config.sonarProjectKey || config.repoName;
 
     this.setupConfig = {
       isSonarCloud,
-      componentKeys: config.sonarComponentKeys,
       organization: config.sonarOrganization,
       component: component,
       timeZone: config.timeZone,
@@ -77,9 +76,6 @@ export class SonarUrlBuilder {
     if (this.setupConfig.isSonarCloud) {
       params.set("issueStatuses", "OPEN,CONFIRMED");
       params.set("facets", "impactSoftwareQualities,impactSeverities");
-      if (this.setupConfig.componentKeys) {
-        params.set("componentKeys", this.setupConfig.componentKeys);
-      }
       if (this.setupConfig.organization) {
         params.set("organization", this.setupConfig.organization);
       }
@@ -88,7 +84,7 @@ export class SonarUrlBuilder {
       params.set("issueStatuses", "CONFIRMED,OPEN");
       params.set(
         "facets",
-        "cleanCodeAttributeCategories,impactSoftwareQualities,severities,types,impactSeverities,codeVariants"
+        "cleanCodeAttributeCategories,impactSoftwareQualities,severities,types,impactSeverities"
       );
       if (this.setupConfig.component) {
         params.set("components", this.setupConfig.component);
