@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/davide97g/sonarflow/compare/v1.3.2...v1.3.3) (2025-11-28)
+
+
+### Chores
+
+* **cleanup:** remove deprecated Sonarflow packages and prompts, streamline bun.lock dependencies, and refactor quality gate status formatting in CLI ([dc95991](https://github.com/davide97g/sonarflow/commit/dc959917262e38bb3a80f2f5015fd0822940601c))
+
 ### [1.3.2](https://github.com/davide97g/sonarflow/compare/v1.3.1...v1.3.2) (2025-11-27)
 
 
