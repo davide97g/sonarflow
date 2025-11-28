@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.4](https://github.com/davide97g/sonarflow/compare/v1.3.3...v1.3.4) (2025-11-28)
+
+
+### Bug Fixes
+
+* **cli:** improve SonarCloud detection by refining URL builder and adding support for custom authentication headers ([c908ae4](https://github.com/davide97g/sonarflow/commit/c908ae4e520f8e816d09a587249c5150bffcb222))
+* **cli:** update Sonar authentication method to use Bearer token and enhance URL builder for SonarCloud detection; add token validation for private Sonar instances ([a2b57f9](https://github.com/davide97g/sonarflow/commit/a2b57f91babd87d87797dc867cba97c2e300295e))
+
 ### [1.3.3](https://github.com/davide97g/sonarflow/compare/v1.3.2...v1.3.3) (2025-11-28)
 
 
