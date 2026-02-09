@@ -5,7 +5,7 @@ The Sonarflow CLI includes an MCP (Model Context Protocol) server so AI editors 
 ## Running the server
 
 ```bash
-npx sonarflow mcp
+npx sonarflow mcp start
 ```
 
 Or after building the CLI from source:
@@ -27,7 +27,7 @@ Add the Sonarflow MCP server in Cursor Settings → MCP, or in your config file 
   "mcpServers": {
     "sonarflow": {
       "command": "npx",
-      "args": ["sonarflow", "mcp"]
+      "args": ["sonarflow", "mcp", "start"]
     }
   }
 }

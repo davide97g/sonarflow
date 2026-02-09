@@ -3,6 +3,7 @@ import {
   FileText,
   Github,
   GitPullRequest,
+  Plug,
   RefreshCw,
   Search,
   Sparkles,
@@ -61,10 +62,16 @@ const Home = () => {
               Fetch issues, run local scans, and integrate seamlessly with your AI-powered editor
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
               <Link to="/get-started">
                 <Button size="lg" className="text-base px-8">
                   Get Started
+                </Button>
+              </Link>
+              <Link to="/mcp">
+                <Button size="lg" variant="secondary" className="text-base px-8 gap-2">
+                  <Plug className="h-4 w-4" aria-hidden />
+                  MCP
                 </Button>
               </Link>
               <a

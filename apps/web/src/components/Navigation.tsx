@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Github, Menu, X } from "lucide-react";
+import { Github, Menu, Plug, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
@@ -44,6 +44,16 @@ const Navigation = () => {
               </Button>
             </Link>
           ))}
+          <Link to="/mcp">
+            <Button
+              variant={isActive("/mcp") ? "secondary" : "default"}
+              size="sm"
+              className="text-sm gap-1.5"
+            >
+              <Plug className="h-4 w-4" aria-hidden />
+              MCP
+            </Button>
+          </Link>
           <a
             href="https://github.com/davide97g/sonarflow"
             target="_blank"
@@ -57,6 +67,7 @@ const Navigation = () => {
         </div>
 
         <button
+          type="button"
           className="md:hidden p-2"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
@@ -83,6 +94,16 @@ const Navigation = () => {
                 </Button>
               </Link>
             ))}
+            <Link to="/mcp" onClick={() => setIsOpen(false)}>
+              <Button
+                variant={isActive("/mcp") ? "secondary" : "default"}
+                size="sm"
+                className="w-full justify-start gap-2"
+              >
+                <Plug className="h-4 w-4" aria-hidden />
+                MCP
+              </Button>
+            </Link>
             <a
               href="https://github.com/davide97g/sonarflow"
               target="_blank"

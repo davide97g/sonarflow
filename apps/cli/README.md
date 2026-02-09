@@ -138,7 +138,7 @@ npx sonarflow update
 
 ```bash
 # Start the MCP server for AI editors (stdio transport)
-npx sonarflow mcp
+npx sonarflow mcp start
 ```
 
 Use this in Cursor or other MCP-enabled editors so the AI can call Sonarflow tools (fetch issues, read config, get issues by file, etc.) without running shell commands.
@@ -232,7 +232,7 @@ Sonarflow includes an [MCP](https://modelcontextprotocol.io) (Model Context Prot
 ### Running the MCP server
 
 ```bash
-npx sonarflow mcp
+npx sonarflow mcp start
 ```
 
 The server uses stdio: the editor spawns this command and communicates over stdin/stdout.
@@ -247,7 +247,7 @@ The server uses stdio: the editor spawns this command and communicates over stdi
   "mcpServers": {
     "sonarflow": {
       "command": "npx",
-      "args": ["sonarflow", "mcp"]
+      "args": ["sonarflow", "mcp", "start"]
     }
   }
 }
