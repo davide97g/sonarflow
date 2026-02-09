@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0-beta.0](https://github.com/davide97g/sonarflow/compare/v1.4.0...v1.5.0-beta.0) (2026-02-09)
+
+
+### Features
+
+* **mcp:** introduce MCP server for AI editors to interact with Sonarflow tools ([6ad7863](https://github.com/davide97g/sonarflow/commit/6ad7863dae42a289a113255d182fbd8dbb5ab7cd))
+* **mcp:** update MCP command to 'start' and enhance documentation; add MCP page to web app ([3971bda](https://github.com/davide97g/sonarflow/commit/3971bdac58e869fda3da26081ac95bb5c2a10710))
+
 ## [1.4.0](https://github.com/davide97g/sonarflow/compare/v1.3.4...v1.4.0) (2025-11-28)
 
 
