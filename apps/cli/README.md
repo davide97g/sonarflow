@@ -134,6 +134,15 @@ npx sonarflow init
 npx sonarflow update
 ```
 
+#### Start MCP Server
+
+```bash
+# Start the MCP server for AI editors (stdio transport)
+npx sonarflow mcp
+```
+
+Use this in Cursor or other MCP-enabled editors so the AI can call Sonarflow tools (fetch issues, read config, get issues by file, etc.) without running shell commands.
+
 ### As npm Scripts
 
 After initialization, you can use the added npm scripts:
@@ -149,6 +158,7 @@ sonar:fetch
 - **Fallback Support**: Falls back to branch-based extraction if PR detection fails
 - **PR Link Support**: Fetch issues directly using a SonarQube PR link
 - **AI Editor Integration**: Creates rules for Cursor, VSCode, Windsurf for automated issue fixing
+- **MCP Server**: Exposes Sonarflow as tools for AI editors (Cursor, etc.) via the Model Context Protocol
 - **Custom Icon Theme**: Installs a local theme under `.vscode/icon-theme/` and sets `workbench.iconTheme` so `.sonarflowrc.json` is visually distinguished in your workspace
 - **Issue Summary**: Displays a summary of issues by severity after fetching
 - **Configuration Management**: Interactive setup for easy configuration
@@ -214,6 +224,62 @@ The tool creates specific rules for your chosen AI editor to help with automated
 - **Other**: Creates `.rules/sonarflow-autofix.md`
 
 These rules provide patterns and priorities for fixing common SonarQube issues.
+
+## MCP Server
+
+Sonarflow includes an [MCP](https://modelcontextprotocol.io) (Model Context Protocol) server so AI editors (e.g. Cursor) can use Sonarflow via tools instead of terminal commands.
+
+### Running the MCP server
+
+```bash
+npx sonarflow mcp
+```
+
+The server uses stdio: the editor spawns this command and communicates over stdin/stdout.
+
+### Adding to Cursor
+
+1. Open Cursor Settings → MCP (or edit `.cursor/mcp.json` in your project/user config).
+2. Add a Sonarflow server entry. Example:
+
+```json
+{
+  "mcpServers": {
+    "sonarflow": {
+      "command": "npx",
+      "args": ["sonarflow", "mcp"]
+    }
+  }
+}
+```
+
+For a project that has Sonarflow installed locally, you can use the CLI path:
+
+```json
+{
+  "mcpServers": {
+    "sonarflow": {
+      "command": "node",
+      "args": ["node_modules/sonarflow/dist/mcp/server.js"]
+    }
+  }
+}
+```
+
+### Tools provided
+
+| Tool | Description |
+|------|-------------|
+| **sonarflow_fetch** | Run the same fetch as `sonarflow fetch`; returns a short summary (issue count, quality gate status, file paths). |
+| **sonarflow_get_issues** | Read `.sonarflow/issues.json` with optional filters: severity, component (file path), rule, limit. |
+| **sonarflow_get_issues_by_file** | Same issues grouped by file (component) for "fix all issues in this file" workflows. |
+| **sonarflow_get_quality_gate** | Read `.sonarflow/quality-gate.json` (status and conditions). |
+| **sonarflow_get_measures** | Read key metrics from `.sonarflow/measures.json` (coverage, duplication, etc.); optional metric key filter. |
+| **sonarflow_get_config** | Read `.sonarflowrc.json` (rulePath, outputPath, sonarProjectKey, etc.). |
+| **sonarflow_get_autofix_rule** | Read the autofix rule file from the path in config (`rulePath`). |
+| **sonarflow_check_setup** | Check if the project is initialized and has fetched data; suggests `sonarflow init` or `sonarflow fetch` if needed. |
+
+All tools resolve paths from the current working directory (project root). Run `sonarflow init` and `sonarflow fetch` at least once so the AI has config and issue data to read.
 
 ## Requirements
 

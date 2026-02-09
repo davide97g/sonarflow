@@ -151,4 +151,11 @@ program
     await checkForUpdates();
   });
 
+program
+  .command("mcp")
+  .description("Start the MCP server for AI editors (stdio transport)")
+  .action(() => {
+    runNodeScript("./mcp/server.js", []);
+  });
+
 program.parse(process.argv);
