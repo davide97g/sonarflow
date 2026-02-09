@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import dotenv from "dotenv";
 import { z } from "zod";
+import type { ZodRawShapeCompat } from "@modelcontextprotocol/sdk/server/zod-compat.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { fetchSonarIssues } from "../packages/versioning/index.js";
@@ -70,16 +71,8 @@ const server = new McpServer(
   }
 );
 
-type ToolResult = { content: Array<{ type: "text"; text: string }> };
-type RegisterTool = (
-  name: string,
-  config: { title?: string; description?: string; inputSchema?: unknown },
-  handler: (args: Record<string, unknown>) => Promise<ToolResult>
-) => void;
-const registerTool = (server as { registerTool: RegisterTool }).registerTool.bind(server);
-
 // sonarflow_fetch
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_fetch",
   {
     title: "Fetch SonarQube issues",
@@ -89,7 +82,7 @@ registerTool(
       branch: z.string().optional(),
       sonarPrLink: z.string().optional(),
       verbose: z.boolean().optional(),
-    },
+    } as unknown as ZodRawShapeCompat,
   },
   async (args: { branch?: string; sonarPrLink?: string; verbose?: boolean }) => {
     const branch = args.branch ?? null;
@@ -137,7 +130,7 @@ registerTool(
 );
 
 // sonarflow_get_issues
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_get_issues",
   {
     title: "Get SonarQube issues",
@@ -148,7 +141,7 @@ registerTool(
       component: z.string().optional(),
       rule: z.string().optional(),
       limit: z.number().optional(),
-    },
+    } as unknown as ZodRawShapeCompat,
   },
   async (args: { severity?: string; component?: string; rule?: string; limit?: number }) => {
     const outDir = getOutputDir();
@@ -198,7 +191,7 @@ registerTool(
 );
 
 // sonarflow_get_issues_by_file
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_get_issues_by_file",
   {
     title: "Get issues grouped by file",
@@ -206,7 +199,7 @@ registerTool(
       "Read .sonarflow/issues.json and group issues by file (component) for fix-by-file workflows.",
     inputSchema: {
       limit: z.number().optional(),
-    },
+    } as unknown as ZodRawShapeCompat,
   },
   async (args: { limit?: number }) => {
     const outDir = getOutputDir();
@@ -248,7 +241,7 @@ registerTool(
 );
 
 // sonarflow_get_quality_gate
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_get_quality_gate",
   {
     title: "Get quality gate status",
@@ -278,7 +271,7 @@ registerTool(
 );
 
 // sonarflow_get_measures
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_get_measures",
   {
     title: "Get SonarQube measures",
@@ -286,7 +279,7 @@ registerTool(
       "Read key metrics from .sonarflow/measures.json (coverage, duplication, violations, etc.). Optionally filter by metric keys.",
     inputSchema: {
       metricKeys: z.string().optional(),
-    },
+    } as unknown as ZodRawShapeCompat,
   },
   async (args: { metricKeys?: string }) => {
     const outDir = getOutputDir();
@@ -331,7 +324,7 @@ registerTool(
 );
 
 // sonarflow_get_config
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_get_config",
   {
     title: "Get Sonarflow config",
@@ -359,7 +352,7 @@ registerTool(
 );
 
 // sonarflow_get_autofix_rule
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_get_autofix_rule",
   {
     title: "Get autofix rule content",
@@ -401,7 +394,7 @@ registerTool(
 );
 
 // sonarflow_check_setup
-registerTool(
+server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   "sonarflow_check_setup",
   {
     title: "Check Sonarflow setup",
