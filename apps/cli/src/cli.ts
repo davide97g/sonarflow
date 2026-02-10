@@ -131,14 +131,22 @@ program
 program
   .command("fetch")
   .description("Fetch Sonar issues and save to .sonarflow/issues.json")
+  .option("-b, --branch <name>", "Branch to fetch issues for (branch-only, no PR detection)")
   .option("-v, --verbose", "Enable verbose logging")
   .allowExcessArguments(true)
   .action(async (options) => {
     const args = process.argv.slice(3);
-    const branchName = args[0] || null;
-    const sonarPrLink = args[1] || null;
-    const verbose = options.verbose || false;
-    await fetchSonarIssues(branchName, sonarPrLink, verbose);
+    const verbose = options.verbose ?? false;
+
+    const branchOpt = options.branch as string | undefined;
+    if (typeof branchOpt === "string" && branchOpt.length > 0) {
+      await fetchSonarIssues(branchOpt, null, verbose, undefined, true);
+    } else {
+      const branchName = args[0] || null;
+      const sonarPrLink = args[1] || null;
+      await fetchSonarIssues(branchName, sonarPrLink, verbose);
+    }
+
     if (verbose) {
       showUpdateReminder();
     }

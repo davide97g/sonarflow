@@ -620,7 +620,8 @@ export const fetchSonarIssues = async (
   branchName: string | null = null,
   sonarPrLink: string | null = null,
   verbose: boolean = false,
-  projectRoot?: string
+  projectRoot?: string,
+  branchOnly: boolean = false
 ): Promise<void> => {
   const root = projectRoot ?? process.cwd();
   try {
@@ -643,7 +644,7 @@ export const fetchSonarIssues = async (
       return;
     }
 
-    // Get current git branch
+    // Get current git branch (or use explicit branch when branchOnly)
     const currentBranch =
       branchName || execSync("git branch --show-current", { encoding: "utf8" }).trim();
     if (verbose) {
@@ -673,6 +674,25 @@ export const fetchSonarIssues = async (
       issues = await extractor.fetchIssuesForPr(sonarPrLink, config);
       fetchOptions = { pullRequest: prKey };
       usedSource = `PR: ${sonarPrLink}`;
+    } else if (branchOnly) {
+      // Explicit branch: fetch by branch only, no PR detection
+      if (verbose) {
+        console.log(chalk.whiteBright(`Using branch-only mode: ${currentBranch}`));
+      }
+      issues = await extractor.fetchIssuesForBranch(currentBranch, config);
+      fetchOptions = { branch: currentBranch };
+      usedSource = currentBranch;
+
+      if (!issues.issues || issues.issues.length === 0) {
+        if (verbose) {
+          console.warn(
+            chalk.yellow("No issues found for branch. Falling back to branch: main")
+          );
+        }
+        issues = await extractor.fetchIssuesForBranch("main", config);
+        fetchOptions = { branch: "main" };
+        usedSource = "main";
+      }
     } else {
       // Try to automatically detect PR ID from current branch
       const detectedPrId = await detectPrId(
