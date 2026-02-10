@@ -217,6 +217,10 @@ const AddToCursor = () => {
                   Save the config. Cursor will spawn <code className="px-1.5 py-0.5 rounded bg-muted text-sm">npx sonarflow mcp start</code> and
                   communicate over stdio. The AI will then have access to all Sonarflow tools.
                 </p>
+                <p className="text-sm text-muted-foreground">
+                  By default the server uses the current working directory to find <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflowrc.json</code>.
+                  If your config is elsewhere, set <code className="px-1.5 py-0.5 rounded bg-muted text-sm">env.SONARFLOW_CONFIG_PATH</code> to the path to your config file, or add <code className="px-1.5 py-0.5 rounded bg-muted text-sm">--config-path &lt;path&gt;</code> to the args.
+                </p>
               </CardContent>
             </Card>
           </div>

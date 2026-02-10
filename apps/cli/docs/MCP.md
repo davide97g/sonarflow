@@ -14,7 +14,22 @@ Or after building the CLI from source:
 node path/to/apps/cli/dist/mcp/server.js
 ```
 
-The server uses **stdio** transport: the editor spawns the process and communicates via stdin/stdout. All tools resolve paths from the current working directory (project root).
+The server uses **stdio** transport: the editor spawns the process and communicates via stdin/stdout. By default, the server looks for `.sonarflowrc.json` in the **current working directory** (project root when the editor spawns with cwd set to the workspace). All tools resolve paths from that project root.
+
+You can override the config location with the **configPath** attribute:
+
+- **Environment variable** `SONARFLOW_CONFIG_PATH`: path to the `.sonarflowrc.json` file (absolute or relative to process cwd). Set this in your MCP server config if the config file is not in the process cwd.
+- **CLI option** `--config-path <path>`: when starting via `npx sonarflow mcp start --config-path <path>`, the server uses that path for the config file.
+
+Example with custom config path:
+
+```bash
+npx sonarflow mcp start --config-path /path/to/project/.sonarflowrc.json
+```
+
+Or in Cursor MCP config, set `env.SONARFLOW_CONFIG_PATH` to the path to your `.sonarflowrc.json` if the server’s cwd is not the project root.
+
+The server loads `dotenv` with `quiet: true` so no logs are written to stdout (required for the MCP protocol).
 
 ## Cursor configuration
 
@@ -32,6 +47,24 @@ Add the Sonarflow MCP server in Cursor Settings → MCP, or in your config file 
   }
 }
 ```
+
+If your `.sonarflowrc.json` is not in the process cwd (e.g. Cursor does not set cwd to the workspace), add `env` with `SONARFLOW_CONFIG_PATH`:
+
+```json
+{
+  "mcpServers": {
+    "sonarflow": {
+      "command": "npx",
+      "args": ["sonarflow", "mcp", "start"],
+      "env": {
+        "SONARFLOW_CONFIG_PATH": "/absolute/path/to/your/project/.sonarflowrc.json"
+      }
+    }
+  }
+}
+```
+
+Alternatively, pass the path via CLI: `"args": ["sonarflow", "mcp", "start", "--config-path", "/path/to/.sonarflowrc.json"]`.
 
 ### Using local install
 

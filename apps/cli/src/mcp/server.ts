@@ -9,9 +9,13 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { fetchSonarIssues } from "../packages/versioning/index.js";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const cwd = process.cwd();
+const resolvedConfigPath = process.env.SONARFLOW_CONFIG_PATH
+  ? path.resolve(cwd, process.env.SONARFLOW_CONFIG_PATH)
+  : path.join(cwd, ".sonarflowrc.json");
+const projectRoot = path.dirname(resolvedConfigPath);
 
 interface SonarflowConfig {
   repoName: string;
@@ -35,10 +39,9 @@ interface SonarIssuesResponse {
 }
 
 const readConfig = (): SonarflowConfig | null => {
-  const configPath = path.join(cwd, ".sonarflowrc.json");
-  if (!fs.existsSync(configPath)) return null;
+  if (!fs.existsSync(resolvedConfigPath)) return null;
   try {
-    return JSON.parse(fs.readFileSync(configPath, "utf8")) as SonarflowConfig;
+    return JSON.parse(fs.readFileSync(resolvedConfigPath, "utf8")) as SonarflowConfig;
   } catch {
     return null;
   }
@@ -47,7 +50,7 @@ const readConfig = (): SonarflowConfig | null => {
 const getOutputDir = (): string => {
   const config = readConfig();
   const outputPath = config?.outputPath ?? ".sonarflow";
-  return path.join(cwd, outputPath.replace(/\/$/, ""));
+  return path.join(projectRoot, outputPath.replace(/\/$/, ""));
 };
 
 const readJsonFile = <T>(filePath: string): T | null => {
@@ -96,7 +99,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
       console.warn = noop;
     }
     try {
-      await fetchSonarIssues(branch, sonarPrLink, verbose);
+      await fetchSonarIssues(branch, sonarPrLink, verbose, projectRoot);
     } catch (err) {
       console.log = origLog;
       console.warn = origWarn;
@@ -339,7 +342,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
             type: "text" as const,
             text: JSON.stringify({
               error: "Config not found. Run 'sonarflow init' to set up the project.",
-              path: path.join(cwd, ".sonarflowrc.json"),
+              path: resolvedConfigPath,
             }),
           },
         ],
@@ -375,7 +378,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
         ],
       };
     }
-    const fullPath = path.isAbsolute(rulePath) ? rulePath : path.join(cwd, rulePath);
+    const fullPath = path.isAbsolute(rulePath) ? rulePath : path.join(projectRoot, rulePath);
     if (!fs.existsSync(fullPath)) {
       return {
         content: [
@@ -409,7 +412,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
     const result = {
       initialized: hasConfig,
       hasFetchedData: hasIssues,
-      configPath: path.join(cwd, ".sonarflowrc.json"),
+      configPath: resolvedConfigPath,
       issuesPath,
       suggestion: !hasConfig
         ? "Run 'sonarflow init' to configure the project."

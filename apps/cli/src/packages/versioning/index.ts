@@ -37,10 +37,12 @@ interface SonarIssuesResponse {
 
 /**
  * Loads configuration from .sonarflowrc.json
+ * @param projectRoot - Optional project root directory. If provided, .sonarflowrc.json is resolved from this path; otherwise process.cwd() is used.
  * @returns Configuration object
  */
-const loadConfiguration = (): Config => {
-  const configPath = path.join(process.cwd(), ".sonarflowrc.json");
+const loadConfiguration = (projectRoot?: string): Config => {
+  const root = projectRoot ?? process.cwd();
+  const configPath = path.join(root, ".sonarflowrc.json");
 
   if (!fs.existsSync(configPath)) {
     throw new Error("Configuration file not found: .sonarflowrc.json");
@@ -617,11 +619,13 @@ const buildSonarProjectUrl = (
 export const fetchSonarIssues = async (
   branchName: string | null = null,
   sonarPrLink: string | null = null,
-  verbose: boolean = false
+  verbose: boolean = false,
+  projectRoot?: string
 ): Promise<void> => {
+  const root = projectRoot ?? process.cwd();
   try {
     // Load configuration
-    const config = loadConfiguration();
+    const config = loadConfiguration(root);
     if (verbose) {
       console.log(chalk.whiteBright(`🔧 Using configuration: ${JSON.stringify(config, null, 2)}`));
     }
@@ -758,7 +762,7 @@ export const fetchSonarIssues = async (
 
     // Save issues to file
     const outputPath = config.outputPath || ".sonarflow/";
-    const sonarDir = path.join(process.cwd(), outputPath);
+    const sonarDir = path.join(root, outputPath);
     if (!fs.existsSync(sonarDir)) {
       fs.mkdirSync(sonarDir, { recursive: true });
     }

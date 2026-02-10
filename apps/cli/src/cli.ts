@@ -157,7 +157,14 @@ const mcpCmd = program
 mcpCmd
   .command("start")
   .description("Start the MCP server")
-  .action(() => {
+  .option(
+    "--config-path <path>",
+    "Path to .sonarflowrc.json (default: current directory)"
+  )
+  .action((options: { configPath?: string }) => {
+    if (options.configPath) {
+      process.env.SONARFLOW_CONFIG_PATH = options.configPath;
+    }
     runNodeScript("./mcp/server.js", []);
   });
 mcpCmd.action(() => {
