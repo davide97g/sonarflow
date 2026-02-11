@@ -89,3 +89,14 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* CliDemo banner: gradient shift (matches CLI init.ts runBanner colors) */
+@keyframes cli-demo-gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
