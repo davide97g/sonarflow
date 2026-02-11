@@ -17,7 +17,6 @@
     "format": "turbo run format",
     "check": "turbo run check",
     "check:fix": "turbo run check:fix",
-    "prepare": "husky",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major",
@@ -72,7 +71,6 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.19.1",
     "@typescript/native-preview": "^7.0.0-dev.20251127.1",
-    "husky": "^9.1.7",
     "standard-version": "^9.5.0",
     "turbo": "^2.8.6"
   },
