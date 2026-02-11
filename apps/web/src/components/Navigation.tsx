@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Menu, Plug, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle";
 
 const Navigation = () => {
@@ -23,12 +23,7 @@ const Navigation = () => {
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center space-x-2">
-          <img
-            src="/logo.svg"
-            alt="Sonarflow"
-            className="h-8 w-8"
-            aria-label="Sonarflow logo"
-          />
+          <img src="/logo.svg" alt="Sonarflow" className="h-8 w-8" aria-label="Sonarflow logo" />
           <span className="text-xl font-bold">Sonarflow</span>
         </Link>
 
@@ -46,7 +41,7 @@ const Navigation = () => {
           ))}
           <Link to="/mcp">
             <Button
-              variant={isActive("/mcp") ? "secondary" : "default"}
+              variant={isActive("/mcp") ? "secondary" : "ghost"}
               size="sm"
               className="text-sm gap-1.5"
             >
@@ -91,11 +86,7 @@ const Navigation = () => {
         <div className="md:hidden border-t border-border/40 bg-background">
           <div className="container py-4 space-y-2 px-4">
             {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setIsOpen(false)}
-              >
+              <Link key={item.path} to={item.path} onClick={() => setIsOpen(false)}>
                 <Button
                   variant={isActive(item.path) ? "secondary" : "ghost"}
                   size="sm"
@@ -120,11 +111,7 @@ const Navigation = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start"
-              >
+              <Button variant="ghost" size="sm" className="w-full justify-start">
                 <Github className="h-4 w-4 mr-2" />
                 GitHub
               </Button>
@@ -134,11 +121,7 @@ const Navigation = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start"
-              >
+              <Button variant="ghost" size="sm" className="w-full justify-start">
                 <Linkedin className="h-4 w-4 mr-2" />
                 LinkedIn
               </Button>

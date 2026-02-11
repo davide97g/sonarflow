@@ -1,9 +1,9 @@
+import { PlayCircle } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
 
 const PROMPT = "user@host-7f3a2b your-project %";
-const COMMAND_INIT = "sonarflow init";
+const COMMAND_INIT = "npx sonarflow init";
 
 /** Figlet "Slant" banner from real CLI (init.ts runBanner) */
 const BANNER_ART = [
@@ -26,7 +26,7 @@ const INIT_OUTPUT_LINES = [
   "✓ Repository name? your-project",
   "✓ Git provider: github",
   "✓ Repository visibility: public",
-  "✓ Repository organization:",
+  "✓ Repository organization: (optional)",
   "",
   "🔍 Sonar",
   "✓ Sonar mode: custom (self-hosted SonarQube)",
@@ -44,7 +44,6 @@ const INIT_OUTPUT_LINES = [
   "✓ Rule created at .cursor/rules/sonarflow-autofix.mdc",
   "✓ Editor icon theme configured",
   "",
-  "Tip: Install the 'Material Icon Theme' extension for icons to apply in VS Code/Cursor.",
   "✅ Setup complete.",
   "💡 Use 'npx sonarflow@latest <command>' to always get the latest version",
 ];
@@ -79,12 +78,11 @@ const getDelayMs = (stepIndex: number): number => {
 interface CliDemoProps {
   autoPlay?: boolean;
   className?: string;
+  /** When true, the terminal grows to fill its container (e.g. inside LaserFlow box). */
+  fill?: boolean;
 }
 
-const CliDemo = ({
-  autoPlay = true,
-  className = "",
-}: CliDemoProps) => {
+const CliDemo = ({ autoPlay = true, className = "", fill = false }: CliDemoProps) => {
   const [stepIndex, setStepIndex] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -96,10 +94,14 @@ const CliDemo = ({
   if (phase === "output_init" || phase === "complete") {
     const count = phase === "output_init" ? stepIndex - OUTPUT_INIT_START + 1 : INIT_LINE_STEPS;
     outputLines.push(...INIT_OUTPUT_LINES.slice(0, count));
+    // scroll to the bottom of the output
+    const outputElement = document.querySelector(".cli-demo-output");
+    if (outputElement) {
+      outputElement.scrollTop = outputElement.scrollHeight;
+    }
   }
 
-  const currentCommand =
-    phase === "typing_init" ? COMMAND_INIT.slice(0, stepIndex + 1) : "";
+  const currentCommand = phase === "typing_init" ? COMMAND_INIT.slice(0, 0) : "";
 
   const showCursor =
     !isComplete &&
@@ -169,9 +171,9 @@ const CliDemo = ({
   return (
     <section
       aria-label="Sonarflow CLI demo animation"
-      className={`rounded-lg border border-white/10 bg-zinc-950 text-white font-mono text-sm overflow-hidden shadow-xl ${className}`}
+      className={`rounded-lg border border-white/10 bg-zinc-950 text-white font-mono text-sm overflow-hidden shadow-xl ${fill ? "flex h-full min-h-0 flex-col" : ""} ${className}`}
     >
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10">
+      <div className="flex shrink-0 items-center gap-2 px-3 py-2 border-b border-white/10">
         <div className="flex gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-zinc-600" aria-hidden />
           <span className="w-2.5 h-2.5 rounded-full bg-zinc-600" aria-hidden />
@@ -179,29 +181,28 @@ const CliDemo = ({
         </div>
         <span className="text-xs text-zinc-500">your-project</span>
       </div>
-      <div className="p-4 min-h-[280px]">
+      <div
+        className={`p-4 overflow-y-auto cli-demo-output ${fill ? "min-h-0 flex-1" : "min-h-[280px] max-h-[400px]"}`}
+      >
         {/* Command line: show when typing, or above banner/output */}
-        {(phase === "typing_init" || phase === "banner" || phase === "output_init" || phase === "complete") && (
+        {(phase === "typing_init" ||
+          phase === "banner" ||
+          phase === "output_init" ||
+          phase === "complete") && (
           <div className="flex items-center gap-0.5 leading-relaxed">
             <span className="text-zinc-500 select-none">{PROMPT}</span>
             <span className="text-white">
               {phase === "typing_init" ? currentCommand : COMMAND_INIT}
             </span>
             {phase === "typing_init" && showCursor && (
-              <span
-                className="inline-block w-2 h-4 bg-white animate-pulse ml-0.5"
-                aria-hidden
-              />
+              <span className="inline-block w-2 h-4 bg-white animate-pulse ml-0.5" aria-hidden />
             )}
           </div>
         )}
 
         {/* Colorful banner (after Enter on sonarflow init) */}
         {phase === "banner" && (
-          <div
-            className="flex flex-col items-center justify-center py-4 text-center"
-            aria-hidden
-          >
+          <div className="flex flex-col items-center justify-center py-4 text-center" aria-hidden>
             <pre
               className="cli-demo-banner-art text-left text-[0.5rem] leading-tight tracking-tight sm:text-xs"
               style={{
@@ -268,7 +269,7 @@ const CliDemo = ({
           </>
         )}
       </div>
-      <div className="border-t border-white/10 px-3 py-2 flex justify-end">
+      <div className="shrink-0 border-t border-white/10 px-3 py-2 flex justify-end">
         <Button
           type="button"
           variant="ghost"
@@ -279,8 +280,8 @@ const CliDemo = ({
           aria-label="Replay CLI demo animation"
           tabIndex={0}
         >
-          <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
-          Replay
+          <PlayCircle className="h-3.5 w-3.5 mr-1.5" />
+          See it in action
         </Button>
       </div>
     </section>

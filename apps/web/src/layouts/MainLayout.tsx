@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Grainient from "@/components/Grainient";
+import GradualBlur from "@/components/GradualBlur";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 
@@ -42,6 +43,16 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         <Navigation />
         <main className="flex-1">{children}</main>
         <Footer />
+        <GradualBlur
+          target="page"
+          position="bottom"
+          height="8rem"
+          strength={2}
+          divCount={6}
+          curve="bezier"
+          exponential
+          opacity={1}
+        />
       </div>
     </div>
   );

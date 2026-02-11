@@ -1,15 +1,8 @@
-import {
-  Bot,
-  CheckCircle2,
-  Code2,
-  Plug,
-  ListChecks,
-  ArrowRight,
-  ExternalLink,
-} from "lucide-react";
+import { ArrowRight, Bot, CheckCircle2, Code2, ExternalLink, ListChecks, Plug } from "lucide-react";
 import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import CodeBlock from "@/components/CodeBlock";
+import ShinyText from "@/components/ShinyText";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
@@ -73,7 +66,8 @@ const AddToCursor = () => {
       await navigator.clipboard.writeText(CURSOR_CONFIG_NPX);
       toast({
         title: "Config copied",
-        description: "MCP config is in your clipboard. Opening Cursor — paste in Settings → MCP if needed.",
+        description:
+          "MCP config is in your clipboard. Opening Cursor — paste in Settings → MCP if needed.",
       });
       window.location.href = "cursor://";
     } catch {
@@ -96,22 +90,27 @@ const AddToCursor = () => {
               <Plug className="h-4 w-4" aria-hidden />
               Model Context Protocol
             </div>
-            <h1
-              className="text-3xl font-bold tracking-tight md:text-5xl"
-              style={{
-                textShadow:
-                  "0 1px 3px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.5)",
-              }}
-            >
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                MCP
-              </span>
-            </h1>
+
+            <div>
+              <ShinyText
+                text="MCP"
+                speed={2}
+                delay={0}
+                color="#b5b5b5"
+                shineColor="#ffffff"
+                spread={120}
+                direction="left"
+                yoyo={false}
+                pauseOnHover={false}
+                disabled={false}
+                className="text-3xl font-bold tracking-tight md:text-5xl"
+              />
+            </div>
+
             <p
               className="text-lg text-white/95"
               style={{
-                textShadow:
-                  "0 1px 2px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.4)",
+                textShadow: "0 1px 2px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.4)",
               }}
             >
               Use the Model Context Protocol so Cursor’s AI can fetch issues, read config, and fix
@@ -157,8 +156,11 @@ const AddToCursor = () => {
               <p>
                 The <strong className="text-foreground">Model Context Protocol (MCP)</strong> is an
                 open standard that lets AI assistants connect to external tools and data. Cursor
-                supports MCP servers: you run a small process (e.g. <code className="px-1.5 py-0.5 rounded bg-muted text-foreground text-sm">sonarflow mcp start</code>)
-                that speaks over stdin/stdout, and Cursor’s AI can call your tools—like “fetch
+                supports MCP servers: you run a small process (e.g.{" "}
+                <code className="px-1.5 py-0.5 rounded bg-muted text-foreground text-sm">
+                  sonarflow mcp start
+                </code>
+                ) that speaks over stdin/stdout, and Cursor’s AI can call your tools—like “fetch
                 Sonar issues” or “get issues for this file”—without you running terminal commands.
               </p>
               <p>
@@ -191,8 +193,11 @@ const AddToCursor = () => {
                   <CodeBlock code="npx sonarflow fetch" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  See the <Link to="/get-started" className="text-primary hover:underline">Get Started</Link> page for
-                  full setup (.env, etc.).
+                  See the{" "}
+                  <Link to="/get-started" className="text-primary hover:underline">
+                    Get Started
+                  </Link>{" "}
+                  page for full setup (.env, etc.).
                 </p>
               </CardContent>
             </Card>
@@ -203,9 +208,10 @@ const AddToCursor = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <p className="text-muted-foreground">
-                  In Cursor: <strong className="text-foreground">Settings → MCP</strong>, or edit your
-                  MCP config file (e.g. <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.cursor/mcp.json</code> in the project
-                  or your user config).
+                  In Cursor: <strong className="text-foreground">Settings → MCP</strong>, or edit
+                  your MCP config file (e.g.{" "}
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.cursor/mcp.json</code>{" "}
+                  in the project or your user config).
                 </p>
               </CardContent>
             </Card>
@@ -216,7 +222,8 @@ const AddToCursor = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Add a server named <code className="px-1.5 py-0.5 rounded bg-muted text-sm">sonarflow</code>. Use
+                  Add a server named{" "}
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-sm">sonarflow</code>. Use
                   <strong className="text-foreground"> npx</strong> (recommended) so Cursor runs the
                   latest Sonarflow:
                 </p>
@@ -226,12 +233,24 @@ const AddToCursor = () => {
                 </p>
                 <CodeBlock code={CURSOR_CONFIG_LOCAL} language="json" />
                 <p className="text-sm text-muted-foreground">
-                  Save the config. Cursor will spawn <code className="px-1.5 py-0.5 rounded bg-muted text-sm">npx sonarflow mcp start</code> and
-                  communicate over stdio. The AI will then have access to all Sonarflow tools.
+                  Save the config. Cursor will spawn{" "}
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-sm">
+                    npx sonarflow mcp start
+                  </code>{" "}
+                  and communicate over stdio. The AI will then have access to all Sonarflow tools.
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  By default the server uses the current working directory to find <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflowrc.json</code>.
-                  If your config is elsewhere, set <code className="px-1.5 py-0.5 rounded bg-muted text-sm">env.SONARFLOW_CONFIG_PATH</code> to the path to your config file, or add <code className="px-1.5 py-0.5 rounded bg-muted text-sm">--config-path &lt;path&gt;</code> to the args.
+                  By default the server uses the current working directory to find{" "}
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflowrc.json</code>.
+                  If your config is elsewhere, set{" "}
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-sm">
+                    env.SONARFLOW_CONFIG_PATH
+                  </code>{" "}
+                  to the path to your config file, or add{" "}
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-sm">
+                    --config-path &lt;path&gt;
+                  </code>{" "}
+                  to the args.
                 </p>
               </CardContent>
             </Card>
@@ -247,8 +266,8 @@ const AddToCursor = () => {
           <Card className="border-border/50">
             <CardContent className="pt-6 space-y-4 text-muted-foreground">
               <p>
-                Once the server is added, you don’t run MCP commands yourself. In chat or
-                composer, you can ask Cursor to:
+                Once the server is added, you don’t run MCP commands yourself. In chat or composer,
+                you can ask Cursor to:
               </p>
               <ul className="list-disc list-inside space-y-2 pl-2">
                 <li>“Fetch the latest Sonar issues for this branch”</li>
@@ -257,10 +276,12 @@ const AddToCursor = () => {
                 <li>“Fix the Sonar issues in this file using the autofix rule”</li>
               </ul>
               <p>
-                Cursor will call the right Sonarflow tools, get the data, and use it in its
-                answers or edits. All tools use your project root as the working directory, so
-                they read the same <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflowrc.json</code> and{" "}
-                <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflow/</code> output as the CLI.
+                Cursor will call the right Sonarflow tools, get the data, and use it in its answers
+                or edits. All tools use your project root as the working directory, so they read the
+                same{" "}
+                <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflowrc.json</code>{" "}
+                and <code className="px-1.5 py-0.5 rounded bg-muted text-sm">.sonarflow/</code>{" "}
+                output as the CLI.
               </p>
             </CardContent>
           </Card>

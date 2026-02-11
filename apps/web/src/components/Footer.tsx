@@ -1,16 +1,16 @@
-import { Link } from "react-router-dom";
 import { Github, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="border-t border-border/40 bg-muted/30">
-      <div className="container px-4 py-12 md:px-8">
+      <div className="container px-4 py-4 md:px-6">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <img 
-                src="/logo.svg" 
-                alt="Sonarflow" 
+              <img
+                src="/logo.svg"
+                alt="Sonarflow"
                 className="h-8 w-8"
                 aria-label="Sonarflow logo"
               />
@@ -95,9 +95,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <span className="text-xs">
-                  Powered by Node.js & TypeScript
-                </span>
+                <span className="text-xs">Powered by Node.js & TypeScript</span>
               </li>
             </ul>
           </div>
