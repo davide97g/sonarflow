@@ -1,4 +1,5 @@
 import CodeBlock from "@/components/CodeBlock";
+import PageHeader from "@/components/PageHeader";
 import {
   Accordion,
   AccordionContent,
@@ -154,12 +155,11 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
   return (
     <div className="min-h-screen py-12">
       <div className="container px-4 md:px-8 max-w-4xl">
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold mb-4">Frequently Asked Questions</h1>
-          <p className="text-lg text-muted-foreground">
-            Find answers to common questions about Sonarflow
-          </p>
-        </div>
+        <PageHeader
+          title="Frequently Asked Questions"
+          subtitle="Find answers to common questions about Sonarflow"
+          centered
+        />
 
         <Card>
           <CardContent className="pt-6">

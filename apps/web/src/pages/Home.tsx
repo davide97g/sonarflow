@@ -40,13 +40,25 @@ const Home = () => {
             <div className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
               CLI Utility for Modern Development
             </div>
-            <h1 className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+            <h1
+              className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl text-white"
+              style={{
+                textShadow:
+                  "0 1px 3px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.5)",
+              }}
+            >
               Automate SonarQube Issue Management with{" "}
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 AI Integration
               </span>
             </h1>
-            <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
+            <p
+              className="mx-auto max-w-2xl text-lg text-white/95 md:text-xl"
+              style={{
+                textShadow:
+                  "0 1px 2px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.4)",
+              }}
+            >
               Fetch issues, run local scans, and integrate seamlessly with your AI-powered editor
             </p>
 

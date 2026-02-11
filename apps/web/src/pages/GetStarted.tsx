@@ -1,17 +1,16 @@
 import { AlertCircle } from "lucide-react";
 import CodeBlock from "@/components/CodeBlock";
+import PageHeader from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const GetStarted = () => {
   return (
     <div className="min-h-screen py-12">
       <div className="container px-4 md:px-8 max-w-4xl">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">Get Started</h1>
-          <p className="text-lg text-muted-foreground">
-            Follow these steps to install and configure Sonarflow in your project
-          </p>
-        </div>
+        <PageHeader
+          title="Get Started"
+          subtitle="Follow these steps to install and configure Sonarflow in your project"
+        />
 
         <div className="space-y-8">
           <Card>

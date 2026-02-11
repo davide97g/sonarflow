@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import CodeBlock from "@/components/CodeBlock";
+import PageHeader from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -7,12 +8,10 @@ const Docs = () => {
   return (
     <div className="min-h-screen py-12">
       <div className="container px-4 md:px-8 max-w-5xl">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">Documentation</h1>
-          <p className="text-lg text-muted-foreground">
-            Complete reference for all Sonarflow commands and features
-          </p>
-        </div>
+        <PageHeader
+          title="Documentation"
+          subtitle="Complete reference for all Sonarflow commands and features"
+        />
 
         <Tabs defaultValue="commands" className="space-y-8">
           <TabsList className="grid w-full grid-cols-3 lg:w-auto">

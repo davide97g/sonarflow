@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Github, Menu, Plug, X } from "lucide-react";
+import { Github, Linkedin, Menu, Plug, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
@@ -58,9 +58,20 @@ const Navigation = () => {
             href="https://github.com/davide97g/sonarflow"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="GitHub repository"
           >
             <Button variant="ghost" size="sm">
               <Github className="h-4 w-4" />
+            </Button>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/davide-ghiotto/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn profile"
+          >
+            <Button variant="ghost" size="sm">
+              <Linkedin className="h-4 w-4" />
             </Button>
           </a>
           <ThemeToggle />
@@ -116,6 +127,20 @@ const Navigation = () => {
               >
                 <Github className="h-4 w-4 mr-2" />
                 GitHub
+              </Button>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/davide-ghiotto/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
+              >
+                <Linkedin className="h-4 w-4 mr-2" />
+                LinkedIn
               </Button>
             </a>
             <div className="flex justify-start pt-2">

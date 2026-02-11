@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import MainLayout from "./layouts/MainLayout";
+import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import GetStarted from "./pages/GetStarted";
 import Docs from "./pages/Docs";
@@ -25,7 +26,8 @@ const App = () => (
         <BrowserRouter>
           <MainLayout>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Landing />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/get-started" element={<GetStarted />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/contribute" element={<Contribute />} />

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Github } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -62,6 +62,18 @@ const Footer = () => {
                 </a>
               </li>
               <li>
+                <a
+                  href="https://www.linkedin.com/in/davide-ghiotto/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors flex items-center gap-1"
+                  aria-label="LinkedIn profile"
+                >
+                  <Linkedin className="h-3 w-3" />
+                  LinkedIn
+                </a>
+              </li>
+              <li>
                 <Link to="/contact" className="hover:text-foreground transition-colors">
                   Contact
                 </Link>
@@ -73,7 +85,12 @@ const Footer = () => {
             <h3 className="mb-3 text-sm font-semibold">Legal</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a
+                  href="https://opensource.org/licenses/MIT"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
                   MIT License
                 </a>
               </li>

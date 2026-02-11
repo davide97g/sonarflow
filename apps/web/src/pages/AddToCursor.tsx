@@ -96,12 +96,24 @@ const AddToCursor = () => {
               <Plug className="h-4 w-4" aria-hidden />
               Model Context Protocol
             </div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
+            <h1
+              className="text-3xl font-bold tracking-tight md:text-5xl"
+              style={{
+                textShadow:
+                  "0 1px 3px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.5)",
+              }}
+            >
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 MCP
               </span>
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p
+              className="text-lg text-white/95"
+              style={{
+                textShadow:
+                  "0 1px 2px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.4)",
+              }}
+            >
               Use the Model Context Protocol so Cursor’s AI can fetch issues, read config, and fix
               SonarQube findings without leaving the editor.
             </p>

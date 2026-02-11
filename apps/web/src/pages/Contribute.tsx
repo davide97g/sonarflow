@@ -1,4 +1,5 @@
 import CodeBlock from "@/components/CodeBlock";
+import PageHeader from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Github, GitPullRequest, Bug, Lightbulb } from "lucide-react";
@@ -7,11 +8,12 @@ const Contribute = () => {
   return (
     <div className="min-h-screen py-12">
       <div className="container px-4 md:px-8 max-w-4xl">
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold mb-4">Contribute</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Help make Sonarflow better! We welcome contributions from the community
-          </p>
+        <div className="text-center">
+          <PageHeader
+            title="Contribute"
+            subtitle="Help make Sonarflow better! We welcome contributions from the community"
+            centered
+          />
           <div className="mt-8">
             <a
               href="https://github.com/davide97g/sonarflow"
