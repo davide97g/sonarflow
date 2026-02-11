@@ -10,30 +10,18 @@ import { Card, CardContent } from "@/components/ui/card";
 const FAQ = () => {
   const faqs = [
     {
-      question: "How do I authenticate with GitHub Packages?",
-      answer: (
-        <div className="space-y-3">
-          <p>
-            You need a GitHub personal access token with the{" "}
-            <code className="px-1 py-0.5 bg-muted rounded">read:packages</code> scope. Create one at
-            GitHub Settings → Developer settings → Personal access tokens.
-          </p>
-          <CodeBlock code="npm login --registry=https://npm.pkg.github.com" />
-        </div>
-      ),
-    },
-    {
       question: "Why am I getting authentication errors?",
       answer: (
         <div className="space-y-3">
           <p>Common causes:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>Missing or expired GitHub token</li>
-            <li>Incorrect .npmrc configuration</li>
+            <li>Missing or expired Bitbucket or SonarQube token</li>
             <li>Token doesn't have required permissions</li>
           </ul>
-          <p>Verify your .npmrc file contains:</p>
-          <CodeBlock code={`//npm.pkg.github.com/:_authToken=YOUR_TOKEN`} language="text" />
+          <p>
+            Verify your <code className="px-1 py-0.5 bg-muted rounded">.env</code> file contains the
+            correct credentials for your chosen integrations.
+          </p>
         </div>
       ),
     },
@@ -87,11 +75,11 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
           </p>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>
-              <code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code> - Fetched PR
-              issues
+              <code className="px-1 py-0.5 bg-muted rounded">.sonarflow/issues.json</code> - Fetched
+              PR issues
             </li>
             <li>
-              <code className="px-1 py-0.5 bg-muted rounded">.sonar/scanner-report.json</code> -
+              <code className="px-1 py-0.5 bg-muted rounded">.sonarflow/scanner-report.json</code> -
               Local scan results
             </li>
           </ul>
@@ -125,10 +113,6 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
         <div className="space-y-3">
           <p>Check your access tokens have the correct permissions:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>
-              <strong>GitHub:</strong> <code className="px-1 py-0.5 bg-muted rounded">repo</code>{" "}
-              and <code className="px-1 py-0.5 bg-muted rounded">read:packages</code>
-            </li>
             <li>
               <strong>Bitbucket:</strong> PR read permissions
             </li>
@@ -180,8 +164,8 @@ BITBUCKET_APP_PASSWORD=your_app_password`}
         <Card>
           <CardContent className="pt-6">
             <Accordion type="single" collapsible className="w-full">
-              {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
+              {faqs.map((faq) => (
+                <AccordionItem key={faq.question} value={faq.question}>
                   <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     {faq.answer}

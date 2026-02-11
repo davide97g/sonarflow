@@ -180,7 +180,7 @@ const AddToCursor = () => {
                 </div>
                 <p className="text-sm text-muted-foreground">
                   See the <Link to="/get-started" className="text-primary hover:underline">Get Started</Link> page for
-                  full setup (tokens, .env, etc.).
+                  full setup (.env, etc.).
                 </p>
               </CardContent>
             </Card>

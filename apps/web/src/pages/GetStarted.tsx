@@ -16,43 +16,7 @@ const GetStarted = () => {
         <div className="space-y-8">
           <Card>
             <CardHeader>
-              <CardTitle>Step 1: Authenticate to GitHub Packages</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
-                Sonarflow is published to GitHub Packages. You need to authenticate with a personal
-                access token.
-              </p>
-              <CodeBlock code="npm login --registry=https://npm.pkg.github.com" />
-              <div className="flex gap-2 p-4 bg-accent/10 border border-accent/20 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                <p className="text-sm">
-                  You'll need a GitHub personal access token with{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">read:packages</code> scope
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Step 2: Configure Project .npmrc</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
-                Create or update your project's{" "}
-                <code className="px-1 py-0.5 bg-muted rounded">.npmrc</code> file:
-              </p>
-              <CodeBlock
-                code={`//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN`}
-                language="text"
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Step 3: Install Sonarflow</CardTitle>
+              <CardTitle>Step 1: Install Sonarflow</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
@@ -73,7 +37,7 @@ const GetStarted = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Step 4: Initialize Configuration</CardTitle>
+              <CardTitle>Step 2: Initialize Configuration</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
@@ -89,7 +53,7 @@ const GetStarted = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Step 5: Configure Environment Variables</CardTitle>
+              <CardTitle>Step 3: Configure Environment Variables</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
@@ -97,10 +61,7 @@ const GetStarted = () => {
                 required tokens:
               </p>
               <CodeBlock
-                code={`# GitHub Token
-GITHUB_TOKEN=your_github_token
-
-# Bitbucket Credentials (if using Bitbucket)
+                code={`# Bitbucket Credentials (if using Bitbucket with private repositories)
 BITBUCKET_USERNAME=your_username
 BITBUCKET_APP_PASSWORD=your_app_password
 
@@ -114,7 +75,6 @@ SONAR_HOST_URL=https://your-sonarqube-instance.com`}
                 <div className="text-sm space-y-2">
                   <p className="font-medium">Required Access Tokens:</p>
                   <ul className="list-disc list-inside space-y-1 ml-2">
-                    <li>GitHub: Personal access token with repo scope</li>
                     <li>Bitbucket: App password with PR read permissions</li>
                     <li>SonarQube: User token with project analysis permissions</li>
                   </ul>

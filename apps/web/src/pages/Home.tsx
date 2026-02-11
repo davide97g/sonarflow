@@ -4,8 +4,6 @@ import {
   Github,
   GitPullRequest,
   Plug,
-  RefreshCw,
-  Search,
   Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -21,11 +19,6 @@ const Home = () => {
       description: "Automatically fetches issues from your pull requests in GitHub and Bitbucket",
     },
     {
-      icon: Search,
-      title: "Local Scanning",
-      description: "Run SonarQube scans locally on your codebase without server setup",
-    },
-    {
       icon: Sparkles,
       title: "AI Editor Integration",
       description: "Seamlessly integrates with Cursor, VSCode, and Windsurf editors",
@@ -34,11 +27,6 @@ const Home = () => {
       icon: FileText,
       title: "Issue Summary",
       description: "Get detailed JSON reports of all issues found in your project",
-    },
-    {
-      icon: RefreshCw,
-      title: "Update Checking",
-      description: "Automatically checks and notifies you of new versions",
     },
   ];
 

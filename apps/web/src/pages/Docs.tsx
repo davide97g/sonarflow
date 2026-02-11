@@ -103,7 +103,7 @@ const Docs = () => {
             <Card>
               <CardHeader>
                 <CardTitle>
-                  <code className="text-lg font-mono">.sonar/issues.json</code>
+                  <code className="text-lg font-mono">.sonarflow/issues.json</code>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -180,10 +180,28 @@ const Docs = () => {
                       code={`// Add to Cursor settings
 {
   "sonarflow.enabled": true,
-  "sonarflow.issuesPath": ".sonar/issues.json"
+  "sonarflow.issuesPath": ".sonarflow/issues.json"
 }`}
                       language="json"
                     />
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">Claude Code</h3>
+                    <p className="text-muted-foreground mb-3">
+                      Point Claude Code to the{" "}
+                      <code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code> file
+                      in your project so it can surface SonarQube issues during coding.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">VSCode</h3>
+                    <p className="text-muted-foreground mb-3">
+                      Use the Sonarflow extension or configure your workspace to read{" "}
+                      <code className="px-1 py-0.5 bg-muted rounded">.sonar/issues.json</code> for
+                      inline code quality insights.
+                    </p>
                   </div>
 
                   <div>
