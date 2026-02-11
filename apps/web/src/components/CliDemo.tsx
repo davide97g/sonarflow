@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 
-const PROMPT = "davideghiotto@VVTGG3PWLH company-compass %";
+const PROMPT = "user@host-7f3a2b your-project %";
 const COMMAND_INIT = "sonarflow init";
 
 /** Figlet "Slant" banner from real CLI (init.ts runBanner) */
@@ -23,7 +23,7 @@ const INIT_OUTPUT_LINES = [
   "📋 Found existing configuration file, using as defaults",
   "",
   "📦 Repository",
-  "✓ Repository name? sonarflow",
+  "✓ Repository name? your-project",
   "✓ Git provider: github",
   "✓ Repository visibility: public",
   "✓ Repository organization:",
@@ -31,8 +31,8 @@ const INIT_OUTPUT_LINES = [
   "🔍 Sonar",
   "✓ Sonar mode: custom (self-hosted SonarQube)",
   "✓ Sonar organization (required for standard mode):",
-  "✓ Sonar project key (project name): sonarflow",
-  "✓ Sonar URL (base, e.g., https://sonar.mycompany.com): https://sonarflow.io",
+  "✓ Sonar project key (project name): your-project",
+  "✓ Sonar URL (base, e.g., https://sonar.mycompany.com): https://sonar.yourcompany.com",
   "✓ Sonar visibility: public",
   "",
   "🤖 AI",
@@ -177,7 +177,7 @@ const CliDemo = ({
           <span className="w-2.5 h-2.5 rounded-full bg-zinc-600" aria-hidden />
           <span className="w-2.5 h-2.5 rounded-full bg-zinc-600" aria-hidden />
         </div>
-        <span className="text-xs text-zinc-500">company-compass</span>
+        <span className="text-xs text-zinc-500">your-project</span>
       </div>
       <div className="p-4 min-h-[280px]">
         {/* Command line: show when typing, or above banner/output */}
