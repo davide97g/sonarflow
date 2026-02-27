@@ -130,21 +130,41 @@ program
 
 program
   .command("fetch")
-  .description("Fetch Sonar issues and save to .sonarflow/issues.json")
+  .description(
+    "Fetch Sonar issues and save to .sonarflow/issues.json. Modes: current branch + auto PR detection, branch-only (-b), or PR by link/ID (--pr). API URL is always built from config."
+  )
   .option("-b, --branch <name>", "Branch to fetch issues for (branch-only, no PR detection)")
+  .option(
+    "--pr <link-or-id>",
+    "Sonar PR/quality-gate URL (any host, e.g. sonarflow.sonarcloud.io) or raw PR number; API URL is built from config"
+  )
   .option("-v, --verbose", "Enable verbose logging")
   .allowExcessArguments(true)
   .action(async (options) => {
     const args = process.argv.slice(3);
     const verbose = options.verbose ?? false;
+    const prOpt = options.pr as string | undefined;
 
-    const branchOpt = options.branch as string | undefined;
-    if (typeof branchOpt === "string" && branchOpt.length > 0) {
-      await fetchSonarIssues(branchOpt, null, verbose, undefined, true);
+    if (typeof prOpt === "string" && prOpt.length > 0) {
+      // --pr takes precedence over --branch and positionals
+      const isLink =
+        prOpt.includes("pullRequest=") ||
+        prOpt.startsWith("http://") ||
+        prOpt.startsWith("https://");
+      if (isLink) {
+        await fetchSonarIssues(null, prOpt, verbose, undefined, false, null);
+      } else {
+        await fetchSonarIssues(null, null, verbose, undefined, false, prOpt);
+      }
     } else {
-      const branchName = args[0] || null;
-      const sonarPrLink = args[1] || null;
-      await fetchSonarIssues(branchName, sonarPrLink, verbose);
+      const branchOpt = options.branch as string | undefined;
+      if (typeof branchOpt === "string" && branchOpt.length > 0) {
+        await fetchSonarIssues(branchOpt, null, verbose, undefined, true);
+      } else {
+        const branchName = args[0] || null;
+        const sonarPrLink = args[1] || null;
+        await fetchSonarIssues(branchName, sonarPrLink, verbose);
+      }
     }
 
     if (verbose) {

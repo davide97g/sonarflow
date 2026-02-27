@@ -53,6 +53,7 @@ interface Config {
   sonarMode: "standard" | "custom";
   sonarBaseUrl?: string;
   publicSonar?: boolean;
+  defaultBranch?: string;
 
   aiEditor: "cursor" | "copilot (vscode)" | "windsurf" | "other";
   rulesFlavor: "safe" | "vibe-coder" | "yolo";

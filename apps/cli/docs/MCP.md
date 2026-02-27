@@ -100,13 +100,14 @@ Ensure the project has been initialized (`sonarflow init`) and that you have run
 
 ### sonarflow_fetch
 
-Runs the same logic as `sonarflow fetch`: detects branch/PR, fetches Sonar issues, measures, quality gate, and writes `.sonarflow/*.json`. Returns a short summary.
+Runs the same logic as `sonarflow fetch`: detects branch/PR, fetches Sonar issues, measures, quality gate, and writes `.sonarflow/*.json`. You can pass a Sonar PR link or PR number via `pr`; the API URL is always built from config. Returns a short summary.
 
-| Argument       | Type    | Description                                      |
-|----------------|---------|--------------------------------------------------|
-| `branch`       | string  | Optional. Branch name (default: current branch). |
-| `sonarPrLink`  | string  | Optional. SonarQube PR URL to fetch from.        |
-| `verbose`      | boolean | Optional. Enable verbose logging.                 |
+| Argument       | Type    | Description                                                                 |
+|----------------|---------|-----------------------------------------------------------------------------|
+| `branch`       | string  | Optional. Branch name (default: current branch).                            |
+| `sonarPrLink`  | string  | Optional. SonarQube PR URL to fetch from (legacy).                          |
+| `pr`           | string  | Optional. Sonar PR/quality-gate URL (any host) or raw PR number; API URL from config. |
+| `verbose`      | boolean | Optional. Enable verbose logging.                                           |
 
 ### sonarflow_get_issues
 

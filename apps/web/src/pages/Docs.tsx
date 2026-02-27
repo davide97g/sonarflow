@@ -29,16 +29,20 @@ const Docs = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Fetches SonarQube issues from your pull requests on GitHub or Bitbucket.
+                  Fetches SonarQube issues from your pull requests on GitHub or Bitbucket. Use{" "}
+                  <code>--pr</code> to pass a Sonar PR/quality-gate URL or PR number; the API URL
+                  is built from your config.
                 </p>
                 <CodeBlock code="npx sonarflow fetch" />
+                <p className="text-sm text-muted-foreground">
+                  With PR link or number: <code>npx sonarflow fetch --pr &lt;url-or-id&gt;</code>
+                </p>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Options:</p>
                   <CodeBlock
-                    code={`--platform   Platform to use (github or bitbucket)
---pr         Pull request number
---repo       Repository name
---owner      Repository owner`}
+                    code={`-b, --branch <name>   Branch only (no PR detection)
+--pr <link-or-id>     Sonar PR URL (any host) or PR number; API URL from config
+-v, --verbose         Verbose logging`}
                     language="text"
                   />
                 </div>

@@ -1,0 +1,1 @@
+../../../../../.bitcompass/cache/rules/2a5eb8aa-afb0-4bfd-97e6-02c695036332-solution-mcp-cli-integration-guide.md

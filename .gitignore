@@ -17,3 +17,5 @@ build
 .sonarflow/
 
 *.tsbuildinfo
+
+.bitcompass

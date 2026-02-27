@@ -80,16 +80,25 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   {
     title: "Fetch SonarQube issues",
     description:
-      "Run the same fetch as 'sonarflow fetch': detect branch/PR, fetch Sonar issues, measures, quality gate, and save to .sonarflow/. Returns a short summary.",
+      "Run the same fetch as 'sonarflow fetch': detect branch/PR, fetch Sonar issues, measures, quality gate, and save to .sonarflow/. Pass 'pr' to fetch by Sonar PR link or PR number (API URL from config). Returns a short summary.",
     inputSchema: {
       branch: z.string().optional(),
       sonarPrLink: z.string().optional(),
+      pr: z
+        .string()
+        .optional()
+        .describe(
+          "Sonar PR/quality-gate URL (any host) or raw PR number; API URL is built from config"
+        ),
       verbose: z.boolean().optional(),
     } as unknown as ZodRawShapeCompat,
   },
-  async (args: { branch?: string; sonarPrLink?: string; verbose?: boolean }) => {
-    const branch = args.branch ?? null;
-    const sonarPrLink = args.sonarPrLink ?? null;
+  async (args: {
+    branch?: string;
+    sonarPrLink?: string;
+    pr?: string;
+    verbose?: boolean;
+  }) => {
     const verbose = args.verbose ?? false;
     const noop = () => {};
     const origLog = console.log;
@@ -99,7 +108,13 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
       console.warn = noop;
     }
     try {
-      await fetchSonarIssues(branch, sonarPrLink, verbose, projectRoot);
+      if (args.pr != null && args.pr.length > 0) {
+        await fetchSonarIssues(null, args.pr, verbose, projectRoot);
+      } else {
+        const branch = args.branch ?? null;
+        const sonarPrLink = args.sonarPrLink ?? null;
+        await fetchSonarIssues(branch, sonarPrLink, verbose, projectRoot);
+      }
     } catch (err) {
       console.log = origLog;
       console.warn = origWarn;

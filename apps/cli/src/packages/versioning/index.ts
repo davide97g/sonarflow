@@ -27,6 +27,7 @@ interface Config {
   publicSonar?: boolean;
   sonarMode?: "standard" | "custom";
   rulesFlavor?: "safe" | "vibe-coder" | "yolo";
+  defaultBranch?: string;
   [key: string]: unknown;
 }
 
@@ -616,12 +617,19 @@ const buildSonarProjectUrl = (
   }
 };
 
+/**
+ * Returns true if the value looks like a Sonar PR link (URL with pullRequest= or http(s) URL).
+ */
+const isPrLink = (value: string): boolean =>
+  value.includes("pullRequest=") || value.startsWith("http://") || value.startsWith("https://");
+
 export const fetchSonarIssues = async (
   branchName: string | null = null,
   sonarPrLink: string | null = null,
   verbose: boolean = false,
   projectRoot?: string,
-  branchOnly: boolean = false
+  branchOnly: boolean = false,
+  prId: string | null = null
 ): Promise<void> => {
   const root = projectRoot ?? process.cwd();
   try {
@@ -658,12 +666,30 @@ export const fetchSonarIssues = async (
     let usedSource: string;
     let fetchOptions: { branch?: string; pullRequest?: string } = {};
 
-    if (sonarPrLink) {
+    const defaultBranch = config.defaultBranch ?? "main";
+
+    if (prId != null && prId.length > 0) {
+      // Explicit PR ID (e.g. from --pr 42): fetch by PR ID only; API URL from config
+      if (verbose) {
+        console.log(chalk.whiteBright(`Using PR ID: ${prId} (API URL from config)`));
+      }
+      issues = await extractor.fetchIssuesForPrId(prId, config);
+      fetchOptions = { pullRequest: prId };
+      usedSource = `PR #${prId}`;
+    } else if (sonarPrLink && !isPrLink(sonarPrLink)) {
+      // Value passed as "PR link" but it's a raw PR ID (e.g. --pr 42)
+      if (verbose) {
+        console.log(chalk.whiteBright(`Using PR ID: ${sonarPrLink} (API URL from config)`));
+      }
+      issues = await extractor.fetchIssuesForPrId(sonarPrLink, config);
+      fetchOptions = { pullRequest: sonarPrLink };
+      usedSource = `PR #${sonarPrLink}`;
+    } else if (sonarPrLink) {
       // If PR link is provided, fetch issues from that PR
       if (verbose) {
         console.log(chalk.whiteBright(`Using provided SonarQube PR link: ${sonarPrLink}`));
       }
-      // Extract PR key from link
+      // Extract PR key from link (link may be any host, e.g. sonarflow.sonarcloud.io)
       const prKeyMatch = sonarPrLink.match(/pullRequest=([^&]+)/);
       const prKey = prKeyMatch ? prKeyMatch[1] : null;
       if (!prKey) {
@@ -671,6 +697,7 @@ export const fetchSonarIssues = async (
           "Invalid SonarQube PR link format. Expected format: https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY"
         );
       }
+      // API URL is always built from config; link is only used to get the PR key
       issues = await extractor.fetchIssuesForPr(sonarPrLink, config);
       fetchOptions = { pullRequest: prKey };
       usedSource = `PR: ${sonarPrLink}`;
@@ -686,12 +713,12 @@ export const fetchSonarIssues = async (
       if (!issues.issues || issues.issues.length === 0) {
         if (verbose) {
           console.warn(
-            chalk.yellow("No issues found for branch. Falling back to branch: main")
+            chalk.yellow(`No issues found for branch. Falling back to branch: ${defaultBranch}`)
           );
         }
-        issues = await extractor.fetchIssuesForBranch("main", config);
-        fetchOptions = { branch: "main" };
-        usedSource = "main";
+        issues = await extractor.fetchIssuesForBranch(defaultBranch, config);
+        fetchOptions = { branch: defaultBranch };
+        usedSource = defaultBranch;
       }
     } else {
       // Try to automatically detect PR ID from current branch
@@ -720,16 +747,18 @@ export const fetchSonarIssues = async (
         fetchOptions = { branch: currentBranch };
         usedSource = currentBranch;
 
-        // Fallback to main if no issues found
+        // Fallback to default branch if no issues found
         if (!issues.issues || issues.issues.length === 0) {
           if (verbose) {
             console.warn(
-              chalk.yellow("No issues found for current branch. Falling back to branch: main")
+              chalk.yellow(
+                `No issues found for current branch. Falling back to branch: ${defaultBranch}`
+              )
             );
           }
-          issues = await extractor.fetchIssuesForBranch("main", config);
-          fetchOptions = { branch: "main" };
-          usedSource = "main";
+          issues = await extractor.fetchIssuesForBranch(defaultBranch, config);
+          fetchOptions = { branch: defaultBranch };
+          usedSource = defaultBranch;
         }
       }
     }

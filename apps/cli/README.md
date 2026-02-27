@@ -113,11 +113,17 @@ npx sonarflow fetch
 # Fetch issues for a specific branch
 npx sonarflow fetch my-branch
 
-# Fetch issues from a SonarQube PR link
+# Fetch by PR: Sonar PR/quality-gate URL (any host, e.g. sonarflow.sonarcloud.io) or raw PR number
+npx sonarflow fetch --pr https://sonarflow.sonarcloud.io/project/issues?id=myproject&pullRequest=42
+npx sonarflow fetch --pr 42
+
+# Legacy: fetch from a SonarQube PR link (positional)
 npx sonarflow fetch my-branch https://sonarcloud.io/project/issues?id=project&pullRequest=PR_KEY
 ```
 
+- The Sonar API URL is always built from your config (`.sonarflowrc.json` and `SONAR_BASE_URL`); when you pass a PR link, only the PR key is taken from it.
 - Auto PR detection tries provider API first (GitHub or Bitbucket), then falls back to extracting from branch naming patterns.
+- When no PR is detected or no issues are found for the current branch, fetch falls back to the branch set in config as `defaultBranch` (default: `main`; e.g. set to `developer` if needed).
 - Issues are saved to `.sonarflow/issues.json`.
 
 #### Initialize Configuration
@@ -270,7 +276,7 @@ For a project that has Sonarflow installed locally, you can use the CLI path:
 
 | Tool | Description |
 |------|-------------|
-| **sonarflow_fetch** | Run the same fetch as `sonarflow fetch`; returns a short summary (issue count, quality gate status, file paths). |
+| **sonarflow_fetch** | Run the same fetch as `sonarflow fetch` (optional `pr`: Sonar PR link or PR number; API URL from config); returns a short summary (issue count, quality gate status, file paths). |
 | **sonarflow_get_issues** | Read `.sonarflow/issues.json` with optional filters: severity, component (file path), rule, limit. |
 | **sonarflow_get_issues_by_file** | Same issues grouped by file (component) for "fix all issues in this file" workflows. |
 | **sonarflow_get_quality_gate** | Read `.sonarflow/quality-gate.json` (status and conditions). |
