@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import chalk from "chalk";
@@ -195,8 +195,42 @@ mcpCmd
     }
     runNodeScript("./mcp/server.js", []);
   });
-mcpCmd.action(() => {
-  runNodeScript("./mcp/server.js", []);
-});
+mcpCmd
+  .command("status")
+  .description("Print MCP/setup status (config present, fetch data present)")
+  .action(() => {
+    const configPath = process.env.SONARFLOW_CONFIG_PATH
+      ? path.resolve(process.cwd(), process.env.SONARFLOW_CONFIG_PATH)
+      : path.join(process.cwd(), ".sonarflowrc.json");
+    const hasConfig = existsSync(configPath);
+    const outputDir = hasConfig
+      ? (() => {
+          try {
+            const cfg = JSON.parse(readFileSync(configPath, "utf8")) as {
+              outputPath?: string;
+            };
+            const out = (cfg?.outputPath ?? ".sonarflow").replace(/\/$/, "");
+            return path.join(path.dirname(configPath), out);
+          } catch {
+            return path.join(path.dirname(configPath), ".sonarflow");
+          }
+        })()
+      : path.join(process.cwd(), ".sonarflow");
+    const issuesPath = path.join(outputDir, "issues.json");
+    const hasIssues = existsSync(issuesPath);
+    if (hasConfig && hasIssues) {
+      console.log(chalk.green("MCP: ready (project initialized, data fetched)."));
+    } else if (hasConfig) {
+      console.log(
+        chalk.yellow(
+          "MCP: project initialized, but no data yet. Run 'sonarflow fetch', then use MCP tools."
+        )
+      );
+    } else {
+      console.log(
+        chalk.yellow("MCP: not configured. Run 'sonarflow init', then 'sonarflow fetch'.")
+      );
+    }
+  });
 
 program.parse(process.argv);

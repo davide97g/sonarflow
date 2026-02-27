@@ -2,20 +2,34 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import dotenv from "dotenv";
-import { z } from "zod";
-import type { ZodRawShapeCompat } from "@modelcontextprotocol/sdk/server/zod-compat.js";
+import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import type { ZodRawShapeCompat } from "@modelcontextprotocol/sdk/server/zod-compat.js";
+import dotenv from "dotenv";
+import { z } from "zod";
 import { fetchSonarIssues } from "../packages/versioning/index.js";
 
 dotenv.config({ quiet: true });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const cwd = process.cwd();
 const resolvedConfigPath = process.env.SONARFLOW_CONFIG_PATH
   ? path.resolve(cwd, process.env.SONARFLOW_CONFIG_PATH)
   : path.join(cwd, ".sonarflowrc.json");
 const projectRoot = path.dirname(resolvedConfigPath);
+
+function getServerVersion(): string {
+  const packageJsonPath = path.join(__dirname, "../../package.json");
+  try {
+    const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf8")) as { version?: string };
+    return typeof pkg.version === "string" ? pkg.version : "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
 
 interface SonarflowConfig {
   repoName: string;
@@ -65,7 +79,7 @@ const readJsonFile = <T>(filePath: string): T | null => {
 const server = new McpServer(
   {
     name: "sonarflow",
-    version: "1.0.0",
+    version: getServerVersion(),
   },
   {
     capabilities: {
@@ -93,12 +107,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
       verbose: z.boolean().optional(),
     } as unknown as ZodRawShapeCompat,
   },
-  async (args: {
-    branch?: string;
-    sonarPrLink?: string;
-    pr?: string;
-    verbose?: boolean;
-  }) => {
+  async (args: { branch?: string; sonarPrLink?: string; pr?: string; verbose?: boolean }) => {
     const verbose = args.verbose ?? false;
     const noop = () => {};
     const origLog = console.log;
@@ -264,6 +273,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   {
     title: "Get quality gate status",
     description: "Read .sonarflow/quality-gate.json and return status and conditions.",
+    inputSchema: {} as unknown as ZodRawShapeCompat,
   },
   async () => {
     const outDir = getOutputDir();
@@ -347,6 +357,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
   {
     title: "Get Sonarflow config",
     description: "Read and return .sonarflowrc.json (rulePath, outputPath, sonarProjectKey, etc.).",
+    inputSchema: {} as unknown as ZodRawShapeCompat,
   },
   async () => {
     const config = readConfig();
@@ -376,6 +387,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
     title: "Get autofix rule content",
     description:
       "Read the Sonarflow autofix rule file from the path specified in config (rulePath).",
+    inputSchema: {} as unknown as ZodRawShapeCompat,
   },
   async () => {
     const config = readConfig();
@@ -418,6 +430,7 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
     title: "Check Sonarflow setup",
     description:
       "Check if the project is initialized (.sonarflowrc.json exists) and has fetched data (.sonarflow/issues.json).",
+    inputSchema: {} as unknown as ZodRawShapeCompat,
   },
   async () => {
     const hasConfig = readConfig() !== null;
@@ -442,6 +455,12 @@ server.registerTool<ZodRawShapeCompat, ZodRawShapeCompat>(
 );
 
 async function main(): Promise<void> {
+  const config = readConfig();
+  if (!config) {
+    process.stderr.write(
+      "No project config found. Using defaults. Run 'sonarflow init' to configure.\n"
+    );
+  }
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
